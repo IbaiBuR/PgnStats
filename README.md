@@ -6,3 +6,19 @@ This program gets some basic stats from an input pgn file, such as total number 
 Usage is (from cmd):
 
 pgnstats.exe file.pgn output.txt
+
+# Compilation
+
+You need a C compiler such as gcc for example (in PATH)
+
+To compile just run:
+
+gcc -c functions.c
+
+gcc -c main.c
+
+gcc -o pgnstats functions.o main.o
+
+This will create the pgnstats.exe file that can be used from cmd.
+
+
