@@ -11,7 +11,9 @@ pgnstats.exe file.pgn output.txt
 
 You need a C compiler such as gcc for example (in PATH)
 
-To compile just run:
+To compile do the following:
+
+git clone the repository and from cmd cd to the folder where you cloned it, then:
 
 gcc -c functions.c
 
