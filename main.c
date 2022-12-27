@@ -5,7 +5,7 @@
 
 int main(int argc, char *argv[])
 {
-  FILE *f_in, *f_out;
+  FILE *f_in, *f_out, *stats;
   if(argc < 3)
   {
     printf("Please provide the name of the pgn file you want to process.");
@@ -33,15 +33,23 @@ int main(int argc, char *argv[])
     printf("Could not access the specified file.");
     return 4;
   }
+  
+  if(!(stats=fopen("stats.txt","w")))
+  {
+    printf("Could not access the specified file.");
+    fclose(f_out);
+    return 5;
+  }
 
-  getstats(f_out);
+  getstats(f_out, stats);
   rewind(f_out);
-  getavgGD(f_out);
+  getavgGD(f_out, stats);
   rewind(f_out);
-  getavgPC(f_out);
+  getavgPC(f_out, stats);
 
   fclose(f_in);
   fclose(f_out);
+  fclose(stats);
 
   return 0;
 }
