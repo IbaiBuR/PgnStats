@@ -18,12 +18,12 @@ void deleteRtag(FILE *input, FILE *output)
   }
 }
 
-void getstats(FILE *data)
+void getstats(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
   unsigned num_games = 0, white_wins = 0, black_wins = 0, draws = 0;
 
-  while(fgets(line,sizeof(line),data))
+  while(fgets(line,sizeof(line),input))
   {
     if(strstr(line,"[Event "))
       num_games++;
@@ -39,15 +39,19 @@ void getstats(FILE *data)
   printf("The number of draws is: %u\n",draws);
   printf("The number of white wins is: %u\n",white_wins);
   printf("The number of black wins is: %u\n",black_wins);
+  fprintf(output, "The total number of games contained in the pgn file is: %u\n",num_games);
+  fprintf(output, "The number of draws is: %u\n",draws);
+  fprintf(output, "The number of white wins is: %u\n",white_wins);
+  fprintf(output, "The number of black wins is: %u\n",black_wins);
 }
 
-void getavgGD(FILE *data)
+void getavgGD(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   double total_duration = 0;
   unsigned num_games = 0;
 
-  while(fgets(buffer,sizeof(buffer),data))
+  while(fgets(buffer,sizeof(buffer),input))
   {
     if(strstr(buffer,"[Event "))
       num_games++;
@@ -72,15 +76,16 @@ void getavgGD(FILE *data)
 
   double average_duration = total_duration / num_games;
   printf("The average game duration is: %.2f seconds\n", average_duration);
+  fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
 }
 
-void getavgPC(FILE *data)
+void getavgPC(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   unsigned total_plycount = 0, total_games = 0, plycount;
   double average_plycount;
 
-  while(fgets(buffer,sizeof(buffer),data))
+  while(fgets(buffer,sizeof(buffer),input))
   {
     if(strstr(buffer,"[PlyCount "))
     {
@@ -96,8 +101,9 @@ void getavgPC(FILE *data)
   {
     average_plycount = (double)total_plycount / total_games;
     printf("The average plycount: %.2f\n", average_plycount);
+    fprintf(output, "The average plycount: %.2f\n", average_plycount);
   }
   else
-    printf("No games found\n");
+    printf("The PlyCount tag was not found\n");
 
 }
