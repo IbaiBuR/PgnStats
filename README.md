@@ -13,7 +13,7 @@ You need a C compiler such as gcc for example (in PATH)
 
 To compile do the following:
 
-git clone the repository and from cmd cd to the folder where you cloned it, then:
+git clone the repository and from cmd cd to the folder where you cloned it and run make, or do the following:
 
 gcc -c functions.c
 
