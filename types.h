@@ -8,5 +8,6 @@
  void getavgGD(FILE *, FILE *); //gets the average game duration of the input pgn file
  void getavgPC(FILE *, FILE *); //gets the average PlyCount of the input pgn file
  void getavgD(FILE *, FILE *); //gets the average depth per move of the input pgn file
+ void getavgT(FILE *, FILE *); //gets the average time per move of the input pgn file
 
 #endif
