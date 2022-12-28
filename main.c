@@ -48,6 +48,8 @@ int main(int argc, char *argv[])
   getavgPC(f_out, stats);
   rewind(f_out);
   getavgD(f_out, stats);
+  rewind(f_out);
+  getavgT(f_out, stats);
 
   fclose(f_in);
   fclose(f_out);
