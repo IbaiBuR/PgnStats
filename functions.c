@@ -100,8 +100,8 @@ void getavgPC(FILE *input, FILE *output)
   if(total_games)
   {
     average_plycount = (double)total_plycount / total_games;
-    printf("The average plycount: %.2f\n", average_plycount);
-    fprintf(output, "The average plycount: %.2f\n", average_plycount);
+    printf("The average plycount is: %.2f\n", average_plycount);
+    fprintf(output, "The average plycount is: %.2f\n", average_plycount);
   }
   else
     printf("The PlyCount tag was not found\n");
