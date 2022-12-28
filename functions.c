@@ -130,3 +130,28 @@ void getavgD(FILE *input, FILE *output)
   printf("The average depth per move is: %2.f\n",avgdepth);
   fprintf(output, "The average depth per move is: %2.f\n",avgdepth);
 }
+
+void getavgT(FILE *input, FILE *output)
+{
+	char buffer[MAX_MOVES];
+	float time, total_time = 0;
+	unsigned move_count = 0;
+	double avgtime;
+
+	while(fgets(buffer,sizeof(buffer),input))
+	{
+		char *movestart = strstr(buffer, "{");
+
+		if(movestart && !(strstr(buffer, "{book}")))
+		{
+			sscanf(movestart, "{%*f/%*u %f%*c}", &time);
+			//Add time to the total time
+			total_time += time;
+			move_count++;
+		}
+	}
+
+	avgtime = (double)total_time / move_count;
+	printf("The average time per move is: %.2f seconds \n",avgtime);
+	fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+}
