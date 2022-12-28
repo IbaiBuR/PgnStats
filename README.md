@@ -1,7 +1,7 @@
 # PgnStats
 Little C program to get some basic stats from a PGN file
 
-This program gets some basic stats from an input (commented, cutechess-like) pgn file, such as total number of games, wins by white and by black, average game duration, average plycount and average depth per move.
+This program gets some basic stats from an input (commented, cutechess-like) pgn file, such as total number of games, wins by white and by black, average game duration, average plycount and average depth and time per move.
 
 # Usage (from cmd)
 
