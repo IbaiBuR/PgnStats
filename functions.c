@@ -119,7 +119,7 @@ void getavgD(FILE *input, FILE *output)
 
     if(movestart && !(strstr(buffer,"{book}")))
     {
-      sscanf(movestart, "{%*f/%u}", &depth);
+      sscanf(movestart, "{%*f/%u ", &depth);
       // Add the depth to the total depth
       total_depth += depth;
       move_count++;
