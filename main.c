@@ -46,6 +46,8 @@ int main(int argc, char *argv[])
   getavgGD(f_out, stats);
   rewind(f_out);
   getavgPC(f_out, stats);
+  rewind(f_out);
+  getavgD(f_out, stats);
 
   fclose(f_in);
   fclose(f_out);
