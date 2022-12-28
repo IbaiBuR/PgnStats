@@ -110,8 +110,7 @@ void getavgPC(FILE *input, FILE *output)
 void getavgD(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
-  unsigned depth, total_depth = 0, move_count = 0;
-  double avgdepth;
+  unsigned depth, avgdepth, total_depth = 0, move_count = 0;
 
   while(fgets(buffer,sizeof(buffer),input))
   {
@@ -119,16 +118,16 @@ void getavgD(FILE *input, FILE *output)
 
     if(movestart && !(strstr(buffer,"{book}")))
     {
-      sscanf(movestart, "{%*f/%u ", &depth);
+      sscanf(movestart, "{%*f/%u %*f%*c}", &depth);
       // Add the depth to the total depth
       total_depth += depth;
       move_count++;
     }
   }
 
-  avgdepth = (double)total_depth / move_count;
-  printf("The average depth per move is: %.2f\n",avgdepth);
-  fprintf(output, "The average depth per move is: %.2f\n",avgdepth);
+  avgdepth = total_depth / move_count;
+  printf("The average depth per move is: %u\n",avgdepth);
+  fprintf(output, "The average depth per move is: %u\n",avgdepth);
 }
 
 void getavgT(FILE *input, FILE *output)
