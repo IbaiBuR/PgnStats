@@ -5,7 +5,7 @@ This program gets some basic stats from an input (commented, cutechess-like) pgn
 
 # Usage (from cmd)
 
-To use this tool you need a commented pgn file which includes the PlyCount tag and the GameDuration tag too, because if not if wont get those two stats!
+To use this tool you need a commented pgn file which includes the PlyCount tag and the GameDuration tag too, because if not it wont get those two stats!
 
 The command you need to apply is:<p>
 
