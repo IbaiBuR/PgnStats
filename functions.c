@@ -127,8 +127,8 @@ void getavgD(FILE *input, FILE *output)
   }
 
   avgdepth = (double)total_depth / move_count;
-  printf("The average depth per move is: %2.f\n",avgdepth);
-  fprintf(output, "The average depth per move is: %2.f\n",avgdepth);
+  printf("The average depth per move is: %.2f\n",avgdepth);
+  fprintf(output, "The average depth per move is: %.2f\n",avgdepth);
 }
 
 void getavgT(FILE *input, FILE *output)
