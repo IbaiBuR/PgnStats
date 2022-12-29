@@ -17,6 +17,6 @@ You need a C compiler such as gcc for example (in PATH)
 
 To compile do the following:
 
-git clone the repository and from cmd cd to the folder where you cloned it and run make,or, if you are on using Windows, run the windows_compile.bat script.
+git clone the repository and from cmd cd to the folder where you cloned it and run make, or, if you are using Windows, run the windows_compile.bat script.
 
 
