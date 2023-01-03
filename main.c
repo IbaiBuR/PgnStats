@@ -54,6 +54,7 @@ int main(int argc, char *argv[])
   fclose(f_in);
   fclose(f_out);
   fclose(stats);
-
+  remove(argv[2]);
+  
   return 0;
 }
