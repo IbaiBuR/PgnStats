@@ -25,7 +25,7 @@ int main(int argc, char *argv[])
     return 3;
   }
 
-  deleteRtag(f_in,f_out);
+  deleteTags(f_in,f_out);
   fclose(f_out);
 
   if(!(f_out=fopen(argv[2],"r")))
