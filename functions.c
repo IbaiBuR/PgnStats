@@ -3,13 +3,13 @@
 #include <string.h>
 #include "types.h"
 
-void deleteRtag(FILE *input, FILE *output)
+void deleteTags(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
 
   while(fgets(line,sizeof(line),input))
   {
-    if (strncmp(line, "[Result ", 8) == 0) {
+    if(strncmp(line, "[Result ", 8) == 0 || strncmp(line, "[GameStartTime ", 15) == 0 || strncmp(line, "[GameEndTime ", 12) == 0 ) {
       continue;
     }
 
