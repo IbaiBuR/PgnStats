@@ -6,6 +6,8 @@
 int main(int argc, char *argv[])
 {
   FILE *f_in, *f_out, *stats;
+  char nomfich[N];
+  
   if(argc < 3)
   {
     printf("Please provide the name of the pgn file you want to process.");
@@ -34,7 +36,12 @@ int main(int argc, char *argv[])
     return 4;
   }
   
-  if(!(stats=fopen("stats.txt","w")))
+  strcpy(nomfich,argv[1]);
+  char *pospoint = strstr(nomfich, ".");
+  *pospoint = '\0';
+  strcat(nomfich, ".txt");
+  
+  if(!(stats=fopen(nomfich,"w")))
   {
     printf("Could not access the specified file.");
     fclose(f_out);
