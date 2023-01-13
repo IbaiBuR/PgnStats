@@ -8,7 +8,7 @@ int main(int argc, char *argv[])
   FILE *f_in, *f_out, *stats;
   char nomfich[N];
   
-  if(argc < 3)
+  if(argc < 2)
   {
     printf("Please provide the name of the pgn file you want to process.");
     return 1;
@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
     return 2;
   }
 
-  if(!(f_out=fopen(argv[2],"w")))
+  if(!(f_out=fopen("out.txt","w")))
   {
     printf("Could not access the output file.");
     fclose(f_in);
@@ -61,7 +61,7 @@ int main(int argc, char *argv[])
   fclose(f_in);
   fclose(f_out);
   fclose(stats);
-  remove(argv[2]);
+  remove("out.txt");
   
   return 0;
 }
