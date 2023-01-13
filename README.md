@@ -9,7 +9,7 @@ To use this tool you need a commented pgn file which includes the PlyCount tag a
 
 The command you need to apply is:<p>
 
-pgnstats.exe file.pgn output.txt
+PgnStats.exe <name_of_your_pgn>.pgn
 
 # Compilation
 
