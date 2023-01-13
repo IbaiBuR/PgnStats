@@ -30,7 +30,7 @@ int main(int argc, char *argv[])
   deleteTags(f_in,f_out);
   fclose(f_out);
 
-  if(!(f_out=fopen(argv[2],"r")))
+  if(!(f_out=fopen("out.txt","r")))
   {
     printf("Could not access the specified file.");
     return 4;
