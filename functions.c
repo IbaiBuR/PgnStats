@@ -36,13 +36,14 @@ void getstats(FILE *input, FILE *output)
   }
 
   printf("The total number of games contained in the pgn file is: %u\n",num_games);
-  printf("The number of draws is: %u\n",draws);
-  printf("The number of white wins is: %u\n",white_wins);
-  printf("The number of black wins is: %u\n",black_wins);
+  printf("The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
+  printf("The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
+  printf("The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
+
   fprintf(output, "The total number of games contained in the pgn file is: %u\n",num_games);
-  fprintf(output, "The number of draws is: %u\n",draws);
-  fprintf(output, "The number of white wins is: %u\n",white_wins);
-  fprintf(output, "The number of black wins is: %u\n",black_wins);
+  fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
+  fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
+  fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
 }
 
 void getavgGD(FILE *input, FILE *output)
@@ -82,15 +83,14 @@ void getavgGD(FILE *input, FILE *output)
 void getavgPC(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
-  unsigned total_plycount = 0, total_games = 0, plycount;
-  double average_plycount;
+  unsigned total_plycount = 0, total_games = 0, plycount, average_plycount;
 
   while(fgets(buffer,sizeof(buffer),input))
   {
     if(strstr(buffer,"[PlyCount "))
     {
       total_games++;
-      if(sscanf(buffer, "[PlyCount \"%d\"]", &plycount))
+      if(sscanf(buffer, "[PlyCount \"%u\"]", &plycount))
       {
         total_plycount += plycount;
       }
@@ -99,9 +99,9 @@ void getavgPC(FILE *input, FILE *output)
 
   if(total_games)
   {
-    average_plycount = (double)total_plycount / total_games;
-    printf("The average plycount is: %.2f\n", average_plycount);
-    fprintf(output, "The average plycount is: %.2f\n", average_plycount);
+    average_plycount = total_plycount / total_games;
+    printf("The average plycount is: %2d\n", average_plycount);
+    fprintf(output, "The average plycount is: %2d\n", average_plycount);
   }
   else
     printf("The PlyCount tag was not found\n");
