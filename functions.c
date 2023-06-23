@@ -184,7 +184,7 @@ size_t numGames(FILE *input)
 
 void getAvgEco(FILE *input, FILE *output)
 {
-  unsigned ECO_CODES[5];
+  unsigned ECO_CODES[5] = {0};
   char eco_letter, buffer[MAX_MOVES];
   
   while(fgets(buffer, sizeof(buffer), input))
@@ -197,17 +197,17 @@ void getAvgEco(FILE *input, FILE *output)
   }
 
   rewind(input);
-  
-  printf("There are %u eco A openings (%.2f%%)", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
-  printf("There are %u eco B openings (%.2f%%)", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
-  printf("There are %u eco C openings (%.2f%%)", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
-  printf("There are %u eco D openings (%.2f%%)", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
-  printf("There are %u eco E openings (%.2f%%)", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
 
-  fprintf(output, "There are %u eco A openings (%.2f%%)", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
-  fprintf(output, "There are %u eco B openings (%.2f%%)", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
-  fprintf(output, "There are %u eco C openings (%.2f%%)", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
-  fprintf(output, "There are %u eco D openings (%.2f%%)", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
-  fprintf(output, "There are %u eco E openings (%.2f%%)", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+  printf("There are %u eco A openings (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  printf("There are %u eco B openings (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  printf("There are %u eco C openings (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  printf("There are %u eco D openings (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  printf("There are %u eco E openings (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+
+  fprintf(output, "There are %u eco A openings (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  fprintf(output, "There are %u eco B openings (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  fprintf(output, "There are %u eco C openings (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  fprintf(output, "There are %u eco D openings (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  fprintf(output, "There are %u eco E openings (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
   
 }
