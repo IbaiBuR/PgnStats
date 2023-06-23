@@ -23,13 +23,11 @@ void deleteTags(FILE *input, FILE *output)
 void getstats(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
-  unsigned num_games = 0, white_wins = 0, black_wins = 0, draws = 0;
-
+  unsigned white_wins = 0, black_wins = 0, draws = 0;
+  size_t num_games = 0;
   while(fgets(line,sizeof(line),input))
   {
-    if(strstr(line,"[Event "))
-      num_games++;
-    else if(strstr(line,"1/2-1/2"))
+    if(strstr(line,"1/2-1/2"))
       draws++;
     else if(strstr(line,"1-0"))
       white_wins++;
@@ -40,12 +38,14 @@ void getstats(FILE *input, FILE *output)
   
   rewind(input);
 
-  printf("The total number of games contained in the pgn file is: %u\n",num_games);
+  num_games = numGames(input);
+
+  printf("The total number of games contained in the pgn file is: %lu\n",num_games);
   printf("The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
   printf("The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
   printf("The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
 
-  fprintf(output, "The total number of games contained in the pgn file is: %u\n",num_games);
+  fprintf(output, "The total number of games contained in the pgn file is: %lu\n",num_games);
   fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
   fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
   fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
@@ -55,14 +55,11 @@ void getavgGD(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   double total_duration = 0;
-  unsigned num_games = 0;
 
   while(fgets(buffer,sizeof(buffer),input))
   {
-    if(strstr(buffer,"[Event "))
-      num_games++;
 
-    else if(!(strncmp(buffer, "[GameDuration ", 14)))
+    if(!(strncmp(buffer, "[GameDuration ", 14)))
     {
       char *duration_string = strtok(buffer, "\"");  // skip the tag
       duration_string = strtok(NULL, "\"");  // get the duration string
@@ -75,14 +72,14 @@ void getavgGD(FILE *input, FILE *output)
       // Convert the duration to seconds
       double duration = hours * 3600 + minutes * 60 + seconds;
 
-      // Add the duration to the total duration and increment the number of games
+      // Add the duration to the total duration 
       total_duration += duration;
     }
   }
  
   rewind(input);
 
-  double average_duration = total_duration / num_games;
+  double average_duration = total_duration / numGames(input);
   printf("The average game duration is: %.2f seconds\n", average_duration);
   fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
 }
@@ -90,13 +87,12 @@ void getavgGD(FILE *input, FILE *output)
 void getavgPC(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
-  unsigned total_plycount = 0, total_games = 0, plycount, average_plycount;
+  unsigned total_plycount = 0, plycount, average_plycount;
 
   while(fgets(buffer,sizeof(buffer),input))
   {
     if(strstr(buffer,"[PlyCount "))
     {
-      total_games++;
       if(sscanf(buffer, "[PlyCount \"%u\"]", &plycount))
       {
         total_plycount += plycount;
@@ -104,16 +100,17 @@ void getavgPC(FILE *input, FILE *output)
     }
   }
 
-  if(total_games)
+  rewind(input);
+
+  if(numGames(input))
   {
-    average_plycount = total_plycount / total_games;
+    average_plycount = total_plycount / numGames(input);
     printf("The average plycount is: %2d\n", average_plycount);
     fprintf(output, "The average plycount is: %2d\n", average_plycount);
   }
   else
     printf("The PlyCount tag was not found\n");
 
-  rewind(input);
 }
 
 void getavgD(FILE *input, FILE *output)
@@ -198,16 +195,16 @@ void getAvgEco(FILE *input, FILE *output)
 
   rewind(input);
 
-  printf("There are %u eco A openings (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
-  printf("There are %u eco B openings (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
-  printf("There are %u eco C openings (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
-  printf("There are %u eco D openings (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
-  printf("There are %u eco E openings (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+  printf("There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  printf("There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  printf("There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  printf("There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  printf("There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
 
-  fprintf(output, "There are %u eco A openings (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
-  fprintf(output, "There are %u eco B openings (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
-  fprintf(output, "There are %u eco C openings (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
-  fprintf(output, "There are %u eco D openings (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
-  fprintf(output, "There are %u eco E openings (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+  fprintf(output, "There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  fprintf(output, "There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  fprintf(output, "There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  fprintf(output, "There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  fprintf(output, "There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
   
 }

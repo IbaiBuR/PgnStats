@@ -11,6 +11,10 @@ The command you need to apply is:<p>
 
 PgnStats.exe <name_of_your_pgn>.pgn
 
+## Sample output 
+
+![Ls1](/assets/example.png)
+
 # Compilation
 
 You need a C compiler such as gcc for example (in PATH)
