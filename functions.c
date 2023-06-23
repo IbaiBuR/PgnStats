@@ -154,3 +154,47 @@ void getavgT(FILE *input, FILE *output)
 	printf("The average time per move is: %.2f seconds \n",avgtime);
 	fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
 }
+
+size_t numGames(FILE *input)
+{
+  char lines[MAX_MOVES];
+  size_t games = 0;
+
+  while(fgets(lines, sizeof(lines), input))
+  {
+    if(strstr(lines, "[Event "))
+      games++;
+  }
+
+  rewind(input);
+
+  return games;
+}
+
+void getAvgEco(FILE *input, FILE *output)
+{
+  unsigned ECO_CODES[5];
+  char eco_letter, buffer[MAX_MOVES];
+  
+  while(fgets(buffer, sizeof(buffer), input))
+  {
+    if(strstr(buffer, "[ECO "))
+    {
+      sscanf(buffer, "[ECO \"%c%*c%*c\"]", &eco_letter);
+      ECO_CODES[eco_letter - 'A' + 0]++;
+    }
+  }
+
+  printf("There are %u eco A openings (%.2f%%)", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  printf("There are %u eco B openings (%.2f%%)", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  printf("There are %u eco C openings (%.2f%%)", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  printf("There are %u eco D openings (%.2f%%)", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  printf("There are %u eco E openings (%.2f%%)", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+
+  fprintf(output, "There are %u eco A openings (%.2f%%)", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
+  fprintf(output, "There are %u eco B openings (%.2f%%)", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
+  fprintf(output, "There are %u eco C openings (%.2f%%)", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
+  fprintf(output, "There are %u eco D openings (%.2f%%)", ECO_CODES[3], ((double)ECO_CODES[3]/numGames(input) * 100));
+  fprintf(output, "There are %u eco E openings (%.2f%%)", ECO_CODES[4], ((double)ECO_CODES[4]/numGames(input) * 100));
+  
+}
