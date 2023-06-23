@@ -49,14 +49,11 @@ int main(int argc, char *argv[])
   }
 
   getstats(f_out, stats);
-  rewind(f_out);
   getavgGD(f_out, stats);
-  rewind(f_out);
   getavgPC(f_out, stats);
-  rewind(f_out);
   getavgD(f_out, stats);
-  rewind(f_out);
   getavgT(f_out, stats);
+  getAvgEco(f_out, stats);
 
   fclose(f_in);
   fclose(f_out);

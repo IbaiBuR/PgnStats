@@ -16,6 +16,8 @@ void deleteTags(FILE *input, FILE *output)
     // Otherwise, write the line to the output file
     fputs(line, output);
   }
+
+  rewind(input);
 }
 
 void getstats(FILE *input, FILE *output)
@@ -34,6 +36,9 @@ void getstats(FILE *input, FILE *output)
     else if(strstr(line,"0-1"))
       black_wins++;
   }
+
+  
+  rewind(input);
 
   printf("The total number of games contained in the pgn file is: %u\n",num_games);
   printf("The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
@@ -74,6 +79,8 @@ void getavgGD(FILE *input, FILE *output)
       total_duration += duration;
     }
   }
+ 
+  rewind(input);
 
   double average_duration = total_duration / num_games;
   printf("The average game duration is: %.2f seconds\n", average_duration);
@@ -105,6 +112,8 @@ void getavgPC(FILE *input, FILE *output)
   }
   else
     printf("The PlyCount tag was not found\n");
+
+  rewind(input);
 }
 
 void getavgD(FILE *input, FILE *output)
@@ -125,6 +134,7 @@ void getavgD(FILE *input, FILE *output)
     }
   }
 
+  rewind(input);
   avgdepth = total_depth / move_count;
   printf("The average depth per move is: %u\n",avgdepth);
   fprintf(output, "The average depth per move is: %u\n",avgdepth);
@@ -150,6 +160,7 @@ void getavgT(FILE *input, FILE *output)
 		}
 	}
 
+  rewind(input);
 	avgtime = (double)total_time / move_count;
 	printf("The average time per move is: %.2f seconds \n",avgtime);
 	fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
@@ -185,6 +196,8 @@ void getAvgEco(FILE *input, FILE *output)
     }
   }
 
+  rewind(input);
+  
   printf("There are %u eco A openings (%.2f%%)", ECO_CODES[0], ((double)ECO_CODES[0]/numGames(input) * 100));
   printf("There are %u eco B openings (%.2f%%)", ECO_CODES[1], ((double)ECO_CODES[1]/numGames(input) * 100));
   printf("There are %u eco C openings (%.2f%%)", ECO_CODES[2], ((double)ECO_CODES[2]/numGames(input) * 100));
