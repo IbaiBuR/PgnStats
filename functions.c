@@ -78,30 +78,13 @@ void getavgGD(FILE *input, FILE *output)
                 total_duration += duration;
             }
         }
+        
+      rewind(input);
+      double average_duration = total_duration / numGames(input);
+      printf("The average game duration is: %.2f seconds\n", average_duration);
+      fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
     }
     
-    else
-    {
-      while (fgets(buffer, sizeof(buffer), input))
-      {
-        char *move_start = strstr(buffer, "{");
-
-        if (move_start)
-        {
-            float move_time;
-            // Use sscanf to extract the move time from the braces
-            sscanf(move_start, "{%*f/%*u %f%*c}", &move_time);
-            total_duration += move_time;
-        }
-      }
-    }
-
-
-    rewind(input);
-
-    double average_duration = total_duration / numGames(input);
-    printf("The average game duration is: %.2f seconds\n", average_duration);
-    fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
 }
 
 void getavgPC(FILE *input, FILE *output)

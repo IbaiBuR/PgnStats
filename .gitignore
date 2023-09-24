@@ -1,4 +1,5 @@
 *.pgn
 *.txt
 *.exe
+/.idea/*
 PgnStats
