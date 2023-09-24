@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 #include "types.h"
 
 void deleteTags(FILE *input, FILE *output)
@@ -53,35 +54,54 @@ void getstats(FILE *input, FILE *output)
 
 void getavgGD(FILE *input, FILE *output)
 {
-  char buffer[MAX_MOVES];
-  double total_duration = 0;
+    char buffer[MAX_MOVES];
+    double total_duration = 0;
 
-  while(fgets(buffer,sizeof(buffer),input))
-  {
-
-    if(!(strncmp(buffer, "[GameDuration ", 14)))
+    if (tagIsPresent(input, "[GameDuration "))
     {
-      char *duration_string = strtok(buffer, "\"");  // skip the tag
-      duration_string = strtok(NULL, "\"");  // get the duration string
+        while (fgets(buffer, sizeof(buffer), input))
+        {
+            if (!(strncmp(buffer, "[GameDuration ", 14)))
+            {
+                char *duration_string = strtok(buffer, "\"");  // skip the tag
+                duration_string = strtok(NULL, "\"");  // get the duration string
 
-      // Parse the duration string to extract the hours, minutes, and seconds
-      int hours = atoi(strtok(duration_string, ":"));
-      int minutes = atoi(strtok(NULL, ":"));
-      int seconds = atoi(strtok(NULL, ":"));
+                // Parse the duration string to extract the hours, minutes, and seconds
+                int hours = atoi(strtok(duration_string, ":"));
+                int minutes = atoi(strtok(NULL, ":"));
+                int seconds = atoi(strtok(NULL, ":"));
 
-      // Convert the duration to seconds
-      double duration = hours * 3600 + minutes * 60 + seconds;
+                // Convert the duration to seconds
+                double duration = hours * 3600 + minutes * 60 + seconds;
 
-      // Add the duration to the total duration 
-      total_duration += duration;
+                // Add the duration to the total duration 
+                total_duration += duration;
+            }
+        }
     }
-  }
- 
-  rewind(input);
+    
+    else
+    {
+      while (fgets(buffer, sizeof(buffer), input))
+      {
+        char *move_start = strstr(buffer, "{");
 
-  double average_duration = total_duration / numGames(input);
-  printf("The average game duration is: %.2f seconds\n", average_duration);
-  fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
+        if (move_start)
+        {
+            float move_time;
+            // Use sscanf to extract the move time from the braces
+            sscanf(move_start, "{%*f/%*u %f%*c}", &move_time);
+            total_duration += move_time;
+        }
+      }
+    }
+
+
+    rewind(input);
+
+    double average_duration = total_duration / numGames(input);
+    printf("The average game duration is: %.2f seconds\n", average_duration);
+    fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
 }
 
 void getavgPC(FILE *input, FILE *output)
@@ -125,13 +145,14 @@ void getavgD(FILE *input, FILE *output)
     if(movestart && !(strstr(buffer,"{book}")))
     {
       sscanf(movestart, "{%*f/%u %*f%*c}", &depth);
-      // Add the depth to the total depth
-      total_depth += depth;
+
+      total_depth += depth;       // Add the depth to the total depth
       move_count++;
     }
   }
 
   rewind(input);
+
   avgdepth = total_depth / move_count;
   printf("The average depth per move is: %u\n",avgdepth);
   fprintf(output, "The average depth per move is: %u\n",avgdepth);
@@ -147,12 +168,18 @@ void getavgT(FILE *input, FILE *output)
 	while(fgets(buffer,sizeof(buffer),input))
 	{
 		char *movestart = strstr(buffer, "{");
+    char *formatting = (char *) malloc (2 * sizeof(char));
 
 		if(movestart && !(strstr(buffer, "{book}")))
 		{
-			sscanf(movestart, "{%*f/%*u %f%*c}", &time);
-			//Add time to the total time
-			total_time += time;
+			sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
+
+      if(strncmp(formatting, "ms", 2) == 0)
+      {
+        time /= 1000.0;
+      }
+
+			total_time += time; 			//Add time to the total time
 			move_count++;
 		}
 	}
@@ -171,7 +198,7 @@ size_t numGames(FILE *input)
 
   while(fgets(lines, sizeof(lines), input))
   {
-    if(strstr(lines, "[Event "))
+    if(strstr(lines, "[White "))
       games++;
   }
 
@@ -183,9 +210,10 @@ size_t numGames(FILE *input)
 void getAvgEco(FILE *input, FILE *output)
 {
   unsigned ECO_CODES[5] = {0};
-  char eco_letter, buffer[MAX_MOVES];
+  char eco_letter;
+  char buffer[MAX_MOVES];
   size_t num_games = 0;
-  
+
   while(fgets(buffer, sizeof(buffer), input))
   {
     if(strstr(buffer, "[ECO "))
@@ -199,16 +227,33 @@ void getAvgEco(FILE *input, FILE *output)
 
   num_games = numGames(input);
 
-  printf("There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
-  printf("There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
-  printf("There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
-  printf("There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games* 100));
-  printf("There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
+  if(tagIsPresent(input, "[ECO "))
+  {
+    printf("There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
+    printf("There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
+    printf("There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
+    printf("There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games* 100));
+    printf("There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
 
-  fprintf(output, "There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
-  fprintf(output, "There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
-  fprintf(output, "There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
-  fprintf(output, "There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games * 100));
-  fprintf(output, "There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
-  
+    fprintf(output, "There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
+    fprintf(output, "There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
+    fprintf(output, "There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
+    fprintf(output, "There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games * 100));
+    fprintf(output, "There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
+  }
+}
+
+bool tagIsPresent(FILE *input, char *tagName)
+{
+  char buffer[MAX_MOVES];
+  bool tagInFile = false;
+
+  while(fgets(buffer, sizeof(buffer), input) && !tagInFile)
+  {
+    tagInFile = strstr(buffer, tagName);
+  }
+
+  rewind(input);
+
+  return tagInFile;
 }
