@@ -11,7 +11,7 @@
  #define MAX_GAMESTART_LINE 15
  #define MAX_GAMEEND_LINE 12
  
- void getstats(FILE *, FILE *); //gets some bacis stadistics of the input pgn file
+ void getstats(FILE *, FILE *); //gets some basic stadistics of the input pgn file
  void deleteTags(FILE *, FILE *); //deletes the result tag of the input pgn file and writes the output to another file
  void getavgGD(FILE *, FILE *); //gets the average game duration of the input pgn file
  void getavgPC(FILE *, FILE *); //gets the average PlyCount of the input pgn file
