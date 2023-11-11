@@ -6,7 +6,7 @@
 int main(int argc, char *argv[])
 {
   FILE *f_in, *f_out, *stats;
-  char nomfich[N];
+  char nomfich[FILENAME_LENGTH];
   
   if(argc < 2)
   {

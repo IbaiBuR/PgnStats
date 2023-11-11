@@ -10,7 +10,8 @@ void deleteTags(FILE *input, FILE *output)
 
   while(fgets(line,sizeof(line),input))
   {
-    if(strncmp(line, "[Result ", 8) == 0 || strncmp(line, "[GameStartTime ", 15) == 0 || strncmp(line, "[GameEndTime ", 12) == 0 ) {
+    if(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAMESTART_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAMEEND_LINE) == 0 ) 
+    {
       continue;
     }
 
@@ -192,7 +193,7 @@ size_t numGames(FILE *input)
 
 void getAvgEco(FILE *input, FILE *output)
 {
-  unsigned ECO_CODES[5] = {0};
+  unsigned ECO_CODES[NUM_ECOS] = {0};
   char eco_letter;
   char buffer[MAX_MOVES];
   size_t num_games = 0;
