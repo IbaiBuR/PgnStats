@@ -11,7 +11,7 @@ void deleteTags(FILE *input, FILE *output)
 
   while(fgets(line,sizeof(line),input))
   {
-    if(!(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAMESTART_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAMEEND_LINE) == 0 )) 
+    if(!(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAME_START_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAME_END_LINE) == 0 ))
       fputs(line, output);
   }
 
@@ -37,16 +37,19 @@ void getStats(FILE *input, FILE *output)
   rewind(input);
 
   num_games = numGames(input);
+  double whiteWinsPercentage = ((double)white_wins/num_games)*100;
+  double blackWinsPercentage = ((double)black_wins/num_games)*100;
+  double drawPercentage = ((double)draws/num_games)*100;
 
   printf("The total number of games contained in the pgn file is: %lu\n",num_games);
-  printf("The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
-  printf("The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
-  printf("The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
+  printf("The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
+  printf("The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
+  printf("The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
 
   fprintf(output, "The total number of games contained in the pgn file is: %lu\n",num_games);
-  fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, ((double)draws/num_games)*100);
-  fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, ((double)white_wins/num_games)*100);
-  fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
+  fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
+  fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
+  fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
 }
 
 void getAvgGD(FILE *input, FILE *output)
@@ -210,7 +213,7 @@ void getAvgEco(FILE *input, FILE *output)
   if(tagIsPresent(input, "[ECO "))
   {
     double eco_percentages[5];
-    
+
     for (int i = 0; i < 5; i++)
       eco_percentages[i] = ((double)ECO_CODES[i]/num_games * 100);
     
@@ -239,15 +242,36 @@ bool tagIsPresent(FILE *input, char *tagName)
 
 void getOutputFileName(char *inputFileName, char *outputFileName)
 {
-  strcpy(outputFileName, inputFileName);
-  char *pospoint = strstr(outputFileName, ".");
-  *pospoint = '\0';
-  strcat(outputFileName, ".txt");
+    strncpy(outputFileName, inputFileName, MAX_FILENAME_LENGTH);
+    char *pospoint = strstr(outputFileName, ".");
+
+    if (pospoint != NULL) 
+    {
+        *pospoint = '\0';
+        strncat(outputFileName, ".txt", MAX_FILENAME_LENGTH - strlen(outputFileName));
+    }
 }
 
 void getPlayerNames(FILE *input, char playerNames[MAX_PLAYER_NAME_LENGTH][MAX_TOTAL_PLAYERS])
 {
   char buffer[MAX_MOVES];
+  char *whitePlayerName;
+  char *blackPlayerName;
+  unsigned totalPlayerCount = 0;
 
+  while(fgets(buffer, sizeof(buffer), input))
+  {
+    if(strstr(buffer, "[White "))
+      sscanf(buffer, "[White \"%s\"]", whitePlayerName);
+    if(strstr(buffer, black))
+      sscanf(buffer, "[Black \"%s\"]", blackPlayerName);
+
+    if(whitePlayerName && blackPlayerName)
+    {
+        bool isFound = false;
+
+
+    }
+  }
 
 }
