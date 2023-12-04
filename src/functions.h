@@ -4,7 +4,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 
-void getStats(FILE *, FILE *); //gets some basic stadistics of the input pgn file
+void getStats(FILE *, FILE *); //gets some basic statistics of the input pgn file
 void deleteTags(FILE *, FILE *); //deletes the result tag of the input pgn file and writes the output to another file
 void getAvgGD(FILE *, FILE *); //gets the average game duration of the input pgn file
 void getAvgPC(FILE *, FILE *); //gets the average PlyCount of the input pgn file
