@@ -11,13 +11,8 @@ void deleteTags(FILE *input, FILE *output)
 
   while(fgets(line,sizeof(line),input))
   {
-    if(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAMESTART_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAMEEND_LINE) == 0 ) 
-    {
-      continue;
-    }
-
-    // Otherwise, write the line to the output file
-    fputs(line, output);
+    if(!(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAMESTART_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAMEEND_LINE) == 0 )) 
+      fputs(line, output);
   }
 
   rewind(input);
