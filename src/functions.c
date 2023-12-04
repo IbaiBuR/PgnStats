@@ -151,27 +151,26 @@ void getAvgT(FILE *input, FILE *output)
 	while(fgets(buffer,sizeof(buffer),input))
 	{
 		char *movestart = strstr(buffer, "{");
-    char *formatting = (char *) malloc (2 * sizeof(char));
+        char *formatting = (char *) malloc (2 * sizeof(char));
 
 		if(movestart && !(strstr(buffer, "{book}")))
 		{
 			sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
 
-      if(strncmp(formatting, "ms", 2) == 0)
-      {
-        time /= 1000.0;
-      }
+            if(strncmp(formatting, "ms", 2) == 0)
+            {
+              time /= 1000.0;
+            }
 
 			total_time += time; 			//Add time to the total time
 			move_count++;
 		}
 	}
 
-  rewind(input);
-	avgtime = (double)total_time / move_count;
-  
-	printf("The average time per move is: %.2f seconds \n",avgtime);
-	fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+    rewind(input);
+    avgtime = (double)total_time / move_count);
+    printf("The average time per move is: %.2f seconds \n",avgtime);
+    fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
 }
 
 size_t numGames(FILE *input)
@@ -195,7 +194,7 @@ void getAvgEco(FILE *input, FILE *output)
   unsigned ECO_CODES[NUM_ECOS] = {0};
   char eco_letter;
   char buffer[MAX_MOVES];
-  size_t num_games = 0;
+  size_t num_games;
 
   while(fgets(buffer, sizeof(buffer), input))
   {
@@ -252,26 +251,50 @@ void getOutputFileName(char *inputFileName, char *outputFileName)
     }
 }
 
-void getPlayerNames(FILE *input, char playerNames[MAX_PLAYER_NAME_LENGTH][MAX_TOTAL_PLAYERS])
+void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
 {
   char buffer[MAX_MOVES];
-  char *whitePlayerName;
-  char *blackPlayerName;
+  char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+  char blackPlayerName[MAX_PLAYER_NAME_LENGTH] = "";
   unsigned totalPlayerCount = 0;
 
   while(fgets(buffer, sizeof(buffer), input))
   {
     if(strstr(buffer, "[White "))
       sscanf(buffer, "[White \"%s\"]", whitePlayerName);
-    if(strstr(buffer, black))
+    if(strstr(buffer, "[Black "))
       sscanf(buffer, "[Black \"%s\"]", blackPlayerName);
 
-    if(whitePlayerName && blackPlayerName)
+    if(whitePlayerName[0] && blackPlayerName[0])
     {
-        bool isFound = false;
-
-
+        if(totalPlayerCount < MAX_TOTAL_PLAYERS)
+        {
+            if (!isFound(whitePlayerName, playerNames))
+            {
+                strncpy(playerNames[totalPlayerCount], whitePlayerName, MAX_PLAYER_NAME_LENGTH);
+                playerNames[totalPlayerCount][MAX_PLAYER_NAME_LENGTH - 1] = '\0';
+                totalPlayerCount++;
+            }
+            if (!isFound(blackPlayerName, playerNames))
+            {
+                strncpy(playerNames[totalPlayerCount], blackPlayerName, MAX_PLAYER_NAME_LENGTH);
+                playerNames[totalPlayerCount][MAX_PLAYER_NAME_LENGTH - 1] = '\0';
+                totalPlayerCount++;
+            }
+        }
     }
   }
+}
 
+bool isFound(char *playerName, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
+{
+    bool found = false;
+
+    for(int i = 0; i < MAX_TOTAL_PLAYERS && !found; i++)
+    {
+        if(strcmp(playerName, playerNames[i]) == 0)
+            found = true;
+    }
+
+    return found;
 }
