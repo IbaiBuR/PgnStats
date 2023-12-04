@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
+#include "functions.h"
 
 int main(int argc, char *argv[])
 {
@@ -10,19 +11,19 @@ int main(int argc, char *argv[])
   
   if(argc < 2)
   {
-    printf("Please provide the name of the pgn file you want to process.");
+    printf("Please provide the name of the pgn file you want to process.\n");
     return 1;
   }
 
   if(!(f_in=fopen(argv[1],"r")))
   {
-    printf("Could not access the input file.");
+    printf("Could not access the input file.\n");
     return 2;
   }
 
   if(!(f_out=fopen("out.txt","w")))
   {
-    printf("Could not access the output file.");
+    printf("Could not access the output file.\n");
     fclose(f_in);
     return 3;
   }
@@ -32,7 +33,7 @@ int main(int argc, char *argv[])
 
   if(!(f_out=fopen("out.txt","r")))
   {
-    printf("Could not access the specified file.");
+    printf("Could not access the specified file.\n");
     return 4;
   }
   
@@ -43,7 +44,7 @@ int main(int argc, char *argv[])
   
   if(!(stats=fopen(nomfich,"w")))
   {
-    printf("Could not access the specified file.");
+    printf("Could not access the specified file.\n");
     fclose(f_out);
     return 5;
   }

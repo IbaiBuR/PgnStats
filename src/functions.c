@@ -3,6 +3,7 @@
 #include <string.h>
 #include <stdbool.h>
 #include "types.h"
+#include "functions.h"
 
 void deleteTags(FILE *input, FILE *output)
 {
