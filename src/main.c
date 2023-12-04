@@ -37,10 +37,7 @@ int main(int argc, char *argv[])
     return 4;
   }
   
-  strcpy(nomfich,argv[1]);
-  char *pospoint = strstr(nomfich, ".");
-  *pospoint = '\0';
-  strcat(nomfich, ".txt");
+  getOutputFileName(argv[1],nomfich);
   
   if(!(stats=fopen(nomfich,"w")))
   {

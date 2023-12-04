@@ -242,3 +242,11 @@ bool tagIsPresent(FILE *input, char *tagName)
 
   return tagInFile;
 }
+
+void getOutputFileName(char *inputFileName, char *outputFileName)
+{
+  strcpy(outputFileName, inputFileName);
+  char *pospoint = strstr(outputFileName, ".");
+  *pospoint = '\0';
+  strcat(outputFileName, ".txt");
+}
