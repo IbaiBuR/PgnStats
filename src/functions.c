@@ -209,17 +209,16 @@ void getAvgEco(FILE *input, FILE *output)
 
   if(tagIsPresent(input, "[ECO "))
   {
-    printf("There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
-    printf("There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
-    printf("There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
-    printf("There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games* 100));
-    printf("There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
-
-    fprintf(output, "There are %u eco A games (%.2f%%)\n", ECO_CODES[0], ((double)ECO_CODES[0]/num_games * 100));
-    fprintf(output, "There are %u eco B games (%.2f%%)\n", ECO_CODES[1], ((double)ECO_CODES[1]/num_games * 100));
-    fprintf(output, "There are %u eco C games (%.2f%%)\n", ECO_CODES[2], ((double)ECO_CODES[2]/num_games * 100));
-    fprintf(output, "There are %u eco D games (%.2f%%)\n", ECO_CODES[3], ((double)ECO_CODES[3]/num_games * 100));
-    fprintf(output, "There are %u eco E games (%.2f%%)\n", ECO_CODES[4], ((double)ECO_CODES[4]/num_games * 100));
+    double eco_percentages[5];
+    
+    for (int i = 0; i < 5; i++)
+      eco_percentages[i] = ((double)ECO_CODES[i]/num_games * 100);
+    
+    for (int i = 0; i < 5; i++) 
+    {
+      printf("There are %u eco %c games (%.2f%%)\n", ECO_CODES[i], 'A' + i, eco_percentages[i]);
+      fprintf(output, "There are %u eco %c games (%.2f%%)\n", ECO_CODES[i], 'A' + i, eco_percentages[i]);
+    }
   }
 }
 
@@ -244,4 +243,11 @@ void getOutputFileName(char *inputFileName, char *outputFileName)
   char *pospoint = strstr(outputFileName, ".");
   *pospoint = '\0';
   strcat(outputFileName, ".txt");
+}
+
+void getPlayerNames(FILE *input, char playerNames[MAX_PLAYER_NAME_LENGTH][MAX_TOTAL_PLAYERS])
+{
+  char buffer[MAX_MOVES];
+
+
 }

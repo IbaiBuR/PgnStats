@@ -14,5 +14,6 @@ void getAvgEco(FILE *, FILE *); //gets the average eco code distribution of the 
 void getOutputFileName(char *, char *); //gets the output txt file name based on the input pgn file name
 size_t numGames(FILE *); //returns the total number of games in the PGN file
 bool tagIsPresent(FILE *, char *); //returns true if the specified tagName is found in the PGN file, otherwise it returns false
+char * getPlayerNames(FILE *); // returns a char array containing the names of the players in the PGN file
 
 #endif
