@@ -23,7 +23,7 @@ void deleteTags(FILE *input, FILE *output)
   rewind(input);
 }
 
-void getstats(FILE *input, FILE *output)
+void getStats(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
   unsigned white_wins = 0, black_wins = 0, draws = 0;
@@ -54,7 +54,7 @@ void getstats(FILE *input, FILE *output)
   fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, ((double)black_wins/num_games)*100);
 }
 
-void getavgGD(FILE *input, FILE *output)
+void getAvgGD(FILE *input, FILE *output)
 {
     char buffer[MAX_MOVES];
     double total_duration = 0;
@@ -89,7 +89,7 @@ void getavgGD(FILE *input, FILE *output)
     
 }
 
-void getavgPC(FILE *input, FILE *output)
+void getAvgPC(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   unsigned total_plycount = 0, plycount, average_plycount;
@@ -118,7 +118,7 @@ void getavgPC(FILE *input, FILE *output)
 
 }
 
-void getavgD(FILE *input, FILE *output)
+void getAvgD(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   unsigned depth, avgdepth, total_depth = 0, move_count = 0;
@@ -143,7 +143,7 @@ void getavgD(FILE *input, FILE *output)
   fprintf(output, "The average depth per move is: %u\n",avgdepth);
 }
 
-void getavgT(FILE *input, FILE *output)
+void getAvgT(FILE *input, FILE *output)
 {
 	char buffer[MAX_MOVES];
 	float time, total_time = 0;
