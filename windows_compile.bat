@@ -1,4 +1,4 @@
 cd \src
-gcc -c main.c functions.c util.c
-gcc -o PgnStats main.o functions.o util.o
+gcc -c main.c statistics.c util.c
+gcc -o PgnStats main.o statistics.o util.o
 del *.o

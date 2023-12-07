@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "types.h"
-#include "functions.h"
+#include "statistics.h"
 #include "util.h"
 
 void getStats(FILE *input, FILE *output)

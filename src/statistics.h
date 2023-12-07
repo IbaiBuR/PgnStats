@@ -1,5 +1,5 @@
-#ifndef FUNCTIONS_H
-#define FUNCTIONS_H
+#ifndef STATISTICS_H
+#define STATISTICS_H
 
 #include <stdio.h>
 #include <stdbool.h>
