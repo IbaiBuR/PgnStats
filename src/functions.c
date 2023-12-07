@@ -74,6 +74,8 @@ void getAvgGD(FILE *input, FILE *output)
       printf("The average game duration is: %.2f seconds\n", average_duration);
       fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
     }
+    else
+      printf("The GameDuration tag was not found\n");
     
 }
 
@@ -82,21 +84,18 @@ void getAvgPC(FILE *input, FILE *output)
   char buffer[MAX_MOVES];
   unsigned total_plycount = 0, plycount, average_plycount;
 
-  while(fgets(buffer,sizeof(buffer),input))
+  if(tagIsPresent(input, "[PlyCount "))
   {
-    if(strstr(buffer,"[PlyCount "))
+    while(fgets(buffer,sizeof(buffer),input))
     {
-      if(sscanf(buffer, "[PlyCount \"%u\"]", &plycount))
+      if(strstr(buffer,"[PlyCount "))
       {
+        sscanf(buffer, "[PlyCount \"%u\"]", &plycount);
         total_plycount += plycount;
       }
     }
-  }
-
-  rewind(input);
-
-  if(tagIsPresent(input, "[PlyCount "))
-  {
+    
+    rewind(input);
     average_plycount = total_plycount / numGames(input);
     printf("The average plycount is: %2d\n", average_plycount);
     fprintf(output, "The average plycount is: %2d\n", average_plycount);
@@ -119,7 +118,7 @@ void getAvgD(FILE *input, FILE *output)
     {
       sscanf(movestart, "{%*f/%u %*f%*c}", &depth);
 
-      total_depth += depth;       // Add the depth to the total depth
+      total_depth += depth;
       move_count++;
     }
   }
@@ -127,8 +126,15 @@ void getAvgD(FILE *input, FILE *output)
   rewind(input);
 
   avgdepth = total_depth / move_count;
-  printf("The average depth per move is: %u\n",avgdepth);
-  fprintf(output, "The average depth per move is: %u\n",avgdepth);
+
+  if(avgdepth)
+  {
+    printf("The average depth per move is: %u\n",avgdepth);
+    fprintf(output, "The average depth per move is: %u\n",avgdepth);
+  }
+  else
+    printf("Could not parse the average depth per move\n");
+    
 }
 
 void getAvgT(FILE *input, FILE *output)
@@ -157,8 +163,14 @@ void getAvgT(FILE *input, FILE *output)
 
   rewind(input);
   avgtime = (double)total_time / move_count;
-  printf("The average time per move is: %.2f seconds \n",avgtime);
-  fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+  
+  if(avgtime)
+  {
+    printf("The average time per move is: %.2f seconds \n",avgtime);
+    fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+  }
+  else
+    printf("Could not parse the average time per move\n");
 }
 
 size_t numGames(FILE *input)
@@ -184,21 +196,19 @@ void getAvgEco(FILE *input, FILE *output)
   char buffer[MAX_MOVES];
   size_t num_games;
 
-  while(fgets(buffer, sizeof(buffer), input))
-  {
-    if(strstr(buffer, "[ECO "))
-    {
-      sscanf(buffer, "[ECO \"%c%*c%*c\"]", &eco_letter);
-      ECO_CODES[eco_letter - 'A' + 0]++;
-    }
-  }
-
-  rewind(input);
-
-  num_games = numGames(input);
-
   if(tagIsPresent(input, "[ECO "))
   {
+    while(fgets(buffer, sizeof(buffer), input))
+    {
+      if(strstr(buffer, "[ECO "))
+      {
+        sscanf(buffer, "[ECO \"%c%*c%*c\"]", &eco_letter);
+        ECO_CODES[eco_letter - 'A' + 0]++;
+      }
+    }
+
+    rewind(input);
+    num_games = numGames(input);
     double eco_percentages[5];
 
     for (int i = 0; i < 5; i++)
@@ -210,6 +220,8 @@ void getAvgEco(FILE *input, FILE *output)
       fprintf(output, "There are %u eco %c games (%.2f%%)\n", ECO_CODES[i], 'A' + i, eco_percentages[i]);
     }
   }
+  else
+    printf("The ECO tag was not found\n");
 }
 
 void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
