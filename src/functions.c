@@ -4,25 +4,14 @@
 #include <stdbool.h>
 #include "types.h"
 #include "functions.h"
-
-void deleteTags(FILE *input, FILE *output)
-{
-  char line[MAX_MOVES];
-
-  while(fgets(line,sizeof(line),input))
-  {
-    if(!(strncmp(line, "[Result ", MAX_RESULT_LINE) == 0 || strncmp(line, "[GameStartTime ", MAX_GAME_START_LINE) == 0 || strncmp(line, "[GameEndTime ", MAX_GAME_END_LINE) == 0 ))
-      fputs(line, output);
-  }
-
-  rewind(input);
-}
+#include "util.h"
 
 void getStats(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
   unsigned white_wins = 0, black_wins = 0, draws = 0;
   size_t num_games = 0;
+
   while(fgets(line,sizeof(line),input))
   {
     if(strstr(line,"1/2-1/2"))
@@ -81,6 +70,7 @@ void getAvgGD(FILE *input, FILE *output)
         
       rewind(input);
       double average_duration = total_duration / numGames(input);
+
       printf("The average game duration is: %.2f seconds\n", average_duration);
       fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
     }
@@ -105,7 +95,7 @@ void getAvgPC(FILE *input, FILE *output)
 
   rewind(input);
 
-  if(numGames(input))
+  if(tagIsPresent(input, "[PlyCount "))
   {
     average_plycount = total_plycount / numGames(input);
     printf("The average plycount is: %2d\n", average_plycount);
@@ -157,20 +147,18 @@ void getAvgT(FILE *input, FILE *output)
 		{
 			sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
 
-            if(strncmp(formatting, "ms", 2) == 0)
-            {
-              time /= 1000.0;
-            }
+      if(strncmp(formatting, "ms", 2) == 0)
+        time /= 1000.0;
 
-			total_time += time; 			//Add time to the total time
+			total_time += time; 			
 			move_count++;
 		}
 	}
 
-    rewind(input);
-    avgtime = (double)total_time / move_count;
-    printf("The average time per move is: %.2f seconds \n",avgtime);
-    fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+  rewind(input);
+  avgtime = (double)total_time / move_count;
+  printf("The average time per move is: %.2f seconds \n",avgtime);
+  fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
 }
 
 size_t numGames(FILE *input)
@@ -224,33 +212,6 @@ void getAvgEco(FILE *input, FILE *output)
   }
 }
 
-bool tagIsPresent(FILE *input, char *tagName)
-{
-  char buffer[MAX_MOVES];
-  bool tagInFile = false;
-
-  while(fgets(buffer, sizeof(buffer), input) && !tagInFile)
-  {
-    tagInFile = strstr(buffer, tagName);
-  }
-
-  rewind(input);
-
-  return tagInFile;
-}
-
-void getOutputFileName(char *inputFileName, char *outputFileName)
-{
-    strncpy(outputFileName, inputFileName, FILENAME_LENGTH);
-    char *pospoint = strstr(outputFileName, ".");
-
-    if (pospoint != NULL) 
-    {
-        *pospoint = '\0';
-        strncat(outputFileName, ".txt", FILENAME_LENGTH - strlen(outputFileName));
-    }
-}
-
 void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
 {
   char buffer[MAX_MOVES];
@@ -284,17 +245,6 @@ void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_
         }
     }
   }
-}
 
-bool isFound(char *playerName, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
-{
-    bool found = false;
-
-    for(int i = 0; i < MAX_TOTAL_PLAYERS && !found; i++)
-    {
-        if(strcmp(playerName, playerNames[i]) == 0)
-            found = true;
-    }
-
-    return found;
+  rewind(input);
 }

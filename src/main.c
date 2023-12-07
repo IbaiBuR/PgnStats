@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include "types.h"
+#include "util.h"
 #include "functions.h"
 
 int main(int argc, char *argv[])
