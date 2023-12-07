@@ -168,7 +168,7 @@ void getAvgT(FILE *input, FILE *output)
 	}
 
     rewind(input);
-    avgtime = (double)total_time / move_count);
+    avgtime = (double)total_time / move_count;
     printf("The average time per move is: %.2f seconds \n",avgtime);
     fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
 }
@@ -241,13 +241,13 @@ bool tagIsPresent(FILE *input, char *tagName)
 
 void getOutputFileName(char *inputFileName, char *outputFileName)
 {
-    strncpy(outputFileName, inputFileName, MAX_FILENAME_LENGTH);
+    strncpy(outputFileName, inputFileName, FILENAME_LENGTH);
     char *pospoint = strstr(outputFileName, ".");
 
     if (pospoint != NULL) 
     {
         *pospoint = '\0';
-        strncat(outputFileName, ".txt", MAX_FILENAME_LENGTH - strlen(outputFileName));
+        strncat(outputFileName, ".txt", FILENAME_LENGTH - strlen(outputFileName));
     }
 }
 
