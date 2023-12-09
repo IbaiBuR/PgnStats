@@ -17,18 +17,6 @@ void deleteTags(FILE *input, FILE *output)
   rewind(input);
 }
 
-void getOutputFileName(char *inputFileName, char *outputFileName)
-{
-  strncpy(outputFileName, inputFileName, FILENAME_LENGTH);
-  char *pospoint = strstr(outputFileName, ".");
-
-  if (pospoint != NULL) 
-  {
-    *pospoint = '\0';
-    strncat(outputFileName, ".txt", FILENAME_LENGTH - strlen(outputFileName));
-  }
-}
-
 void initializePlayers(Players *players, unsigned totalPlayers)
 {
   players->totalPlayers = totalPlayers;

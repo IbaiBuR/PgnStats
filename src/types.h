@@ -10,6 +10,9 @@
 #define MAX_GAME_END_LINE 12
 #define MAX_PLAYER_NAME_LENGTH 250
 #define MAX_TOTAL_PLAYERS 100
+#define TEMPORAL_PGN "temporal.pgn"
+#define OVERALL_STATS_FILE_NAME "overall_statistics.txt"
+#define INDIVIDUAL_STATS_FILE_NAME "individual_statistics.txt"
 
 #define FIND_MOVESTART(buffer) strstr(buffer, "{")
 #define BOOKMOVE(buffer) strstr(buffer, "{book}")

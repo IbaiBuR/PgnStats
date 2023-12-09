@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 #include "types.h"
 #include "util.h"
 #include "statistics.h"
@@ -7,51 +8,48 @@
 int main(int argc, char *argv[])
 {
   FILE *f_in, *f_out, *stats, *individualStats;
-  char nomfich[FILENAME_LENGTH];
   
   if(argc < 2)
   {
     printf("Please provide the name of the pgn file you want to process.\n");
-    return 1;
+    return EXIT_FAILURE;
   }
 
   if(!(f_in=fopen(argv[1],"r")))
   {
     printf("Could not access the input file.\n");
-    return 2;
+    return EXIT_FAILURE + 1;
   }
 
-  if(!(f_out=fopen("out.txt","w")))
+  if(!(f_out=fopen(TEMPORAL_PGN,"w")))
   {
     printf("Could not access the output file.\n");
     fclose(f_in);
-    return 3;
+    return EXIT_FAILURE + 2;
   }
 
   deleteTags(f_in,f_out);
   fclose(f_out);
 
-  if(!(f_out=fopen("out.txt","r")))
+  if(!(f_out=fopen(TEMPORAL_PGN,"r")))
   {
     printf("Could not access the specified file.\n");
-    return 4;
+    return EXIT_FAILURE + 3;
   }
   
-  getOutputFileName(argv[1],nomfich);
-  
-  if(!(stats=fopen(nomfich,"w")))
+  if(!(stats=fopen(OVERALL_STATS_FILE_NAME,"w")))
   {
     printf("Could not access the specified file.\n");
     fclose(f_out);
-    return 5;
+    return EXIT_FAILURE + 4;
   }
 
-  if(!(individualStats=fopen("individual_statistics.txt","w")))
+  if(!(individualStats=fopen(INDIVIDUAL_STATS_FILE_NAME,"w")))
   {
     printf("Could not access the specified file.\n");
     fclose(f_out);
     fclose(stats);
-    return 6;
+    return EXIT_FAILURE + 5;
   }
 
   getStats(f_out, stats);
@@ -68,7 +66,7 @@ int main(int argc, char *argv[])
   fclose(stats);
   fclose(individualStats);
   
-  remove("out.txt");
+  remove(TEMPORAL_PGN);
   
-  return 0;
+  return EXIT_SUCCESS;
 }

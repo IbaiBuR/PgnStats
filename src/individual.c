@@ -26,20 +26,15 @@ void getIndividualStats(FILE *input, FILE *output)
             if(strstr(buffer, "[Black "))
               (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
 
-            if(strstr(buffer, whitePlayerName))
-            {
-                if(strstr(whitePlayerName, players.playerNames[i]))
-                    isWhitePlayer = true;
-                else
-                    isWhitePlayer = false;
-            }
-            else if(strstr(buffer, blackPlayerName))
-            {
-                if(strstr(blackPlayerName, players.playerNames[i]))
-                    isBlackPlayer = true;
-                else
-                    isBlackPlayer = false;
-            }
+            if(strcmp(whitePlayerName, players.playerNames[i]) == 0)
+                isWhitePlayer = true;
+            else
+                isWhitePlayer = false;
+
+            if(strcmp(blackPlayerName, players.playerNames[i]) == 0)
+                isBlackPlayer = true;
+            else
+                isBlackPlayer = false;
             
             if(strstr(buffer, "1-0") && isWhitePlayer)
             {
@@ -53,7 +48,7 @@ void getIndividualStats(FILE *input, FILE *output)
             {
                 players.individualDraws[i]++;
             }
-            
+
             if((strstr(buffer, "1-0") || strstr(buffer, "0-1") || strstr(buffer, "1/2-1/2")) && (isWhitePlayer || isBlackPlayer))
             {
                 players.totalPlayerGames[i]++;
@@ -83,48 +78,49 @@ unsigned * getIndividualAverageDepth(FILE *input, Players *players)
     {
         move_count = 0;
         individualTotalDepth[i] = 0;
-        printf("Calculating average depth for player %s...\n", players->playerNames[i]);
 
         while(fgets(buffer, sizeof(buffer), input))
         {
         
             if(strstr(buffer, "[White "))
+            {
               (sscanf(buffer, "[White \"%[^\"]\"]", whitePlayerName));
+              isWhiteTurn = true;
+            }
             if(strstr(buffer, "[Black "))
               (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
 
-            if(strstr(buffer, whitePlayerName))
-            {
-                if(strstr(whitePlayerName, players->playerNames[i]))
-                    isWhitePlayer = true;
-                else
-                    isWhitePlayer = false;
-            }
-            else if(strstr(buffer, blackPlayerName))
-            {
-                if(strstr(blackPlayerName, players->playerNames[i]))
-                    isBlackPlayer = true;
-                else
-                    isBlackPlayer = false;
-            }
+            if(strcmp(whitePlayerName, players->playerNames[i]) == 0)
+                isWhitePlayer = true;
+            else
+                isWhitePlayer = false;
+
+            if(strcmp(blackPlayerName, players->playerNames[i]) == 0)
+                isBlackPlayer = true;
+            else
+                isBlackPlayer = false;
 
             char *movestart = FIND_MOVESTART(buffer);
+            char *bookMove = BOOKMOVE(buffer);
 
-            if(movestart && !BOOKMOVE(buffer))
+            while(movestart)
             {
-                move_count = isWhiteTurn ? move_count + 1 : move_count;
-
-                if((isWhitePlayer && isWhiteTurn) || (isBlackPlayer && !isWhiteTurn))
-                {
-                    sscanf(movestart, "{%*f/%u %*f%*c}", &currentDepth);
-                    individualTotalDepth[i] += currentDepth;
-                    printf("Current depth: %u\n", currentDepth);
+                if(!bookMove)
+                {     
+                    if((isWhitePlayer && isWhiteTurn) || (isBlackPlayer && !isWhiteTurn))
+                    {
+                        move_count++;
+                        sscanf(movestart, "{%*[^/]/%u", &currentDepth);
+                        individualTotalDepth[i] += currentDepth;
+                    }       
                 }
+
+                isWhiteTurn = !isWhiteTurn;
+                movestart = strstr(movestart + 1, "{");
+                bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
             }
-            isWhiteTurn = !isWhiteTurn;
         }
 
-        printf("Move count: %u\n", move_count);
         players->individualAverageDepth[i] = individualTotalDepth[i] / move_count;
         rewind(input);
     }
