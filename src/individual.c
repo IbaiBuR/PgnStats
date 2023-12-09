@@ -22,9 +22,8 @@ void getIndividualBasicStats(FILE *input, FILE *output)
         while(fgets(buffer, sizeof(buffer), input))
         {
             if(strstr(buffer, playerNames[i]))
-            {
                 currentPlayer = true;
-            }
+            
             if(strstr(buffer, "1-0") && currentPlayer)
             {
                 individualWhiteWins[i]++;
@@ -54,16 +53,16 @@ void getIndividualBasicStats(FILE *input, FILE *output)
     fprintf(output, "=====================================\n");
     fprintf(output, "\nThere are exactly %u players in the PGN file:\n\n", totalPlayers);
     
-    for(int i = 0; i < totalPlayers; i++)
+    for (int i = 0; i < totalPlayers; i++)
     {
-        fprintf(output, "- Player: %s\n", playerNames[i]);
-        fprintf(output, "\tWhite wins: %u (%.2f%%)\n", individualWhiteWins[i], calculateWhiteWinPercentage(individualWhiteWins[i], totalPlayerGames[i]));
-        fprintf(output, "\tBlack wins: %u (%.2f%%)\n", individualBlackWins[i], calculateBlackWinPercentage(individualBlackWins[i], totalPlayerGames[i]));
-        fprintf(output, "\tDraws: %u (%.2f%%)\n", individualDraws[i], calculateDrawPercentage(individualDraws[i], totalPlayerGames[i]));
-        fprintf(output, "\tTotal games: %lu (%.2f%%)\n", totalPlayerGames[i], calculateGamePercentage(totalPlayerGames[i], totalGames));
-        fprintf(output, "\tWin rate: %.2f%%\n", calculateWinRate(individualWhiteWins[i], individualBlackWins[i], individualDraws[i]));
-
-        if(i + 1 != totalPlayers)
+        fprintf(output, "- Player: %-20s\n", playerNames[i]);
+        fprintf(output, "\t·White wins : %-5u (%.2f%%)\n", individualWhiteWins[i], calculateWhiteWinPercentage(individualWhiteWins[i], totalPlayerGames[i]));
+        fprintf(output, "\t·Black wins : %-5u (%.2f%%)\n", individualBlackWins[i], calculateBlackWinPercentage(individualBlackWins[i], totalPlayerGames[i]));
+        fprintf(output, "\t·Draws      : %-5u (%.2f%%)\n", individualDraws[i], calculateDrawPercentage(individualDraws[i], totalPlayerGames[i]));
+        fprintf(output, "\t·Total games: %-5lu (%.2f%%)\n", totalPlayerGames[i], calculateGamePercentage(totalPlayerGames[i], totalGames));
+        fprintf(output, "\t·Win rate   : %.2f%%\n", calculateWinRate(individualWhiteWins[i], individualBlackWins[i], totalPlayerGames[i]));
+    
+        if (i + 1 != totalPlayers)
             fprintf(output, "\n------------------------------\n\n");
         else
             fprintf(output, "\n==============================");
