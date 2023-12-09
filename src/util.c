@@ -29,6 +29,20 @@ void getOutputFileName(char *inputFileName, char *outputFileName)
   }
 }
 
+void initializePlayers(Players *players, unsigned totalPlayers)
+{
+  players->totalPlayers = totalPlayers;
+
+  for(int i = 0; i < MAX_TOTAL_PLAYERS; i++)
+  {
+    players->individualWhiteWins[i] = 0;
+    players->individualBlackWins[i] = 0;
+    players->individualDraws[i] = 0;
+    players->totalPlayerGames[i] = 0;
+    players->individualAverageDepth[i] = 0;
+  }
+}
+
 unsigned getPlayers(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
 {
   char buffer[MAX_MOVES];

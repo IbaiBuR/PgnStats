@@ -114,7 +114,7 @@ void getAvgD(FILE *input, FILE *output)
 
   while(fgets(buffer,sizeof(buffer),input))
   {
-    char *movestart = strstr(buffer,"{");
+    char *movestart = FIND_MOVESTART(buffer);
 
     if(movestart && !(strstr(buffer,"{book}")))
     {
@@ -148,8 +148,8 @@ void getAvgT(FILE *input, FILE *output)
 
 	while(fgets(buffer,sizeof(buffer),input))
 	{
-		char *movestart = strstr(buffer, "{");
-        char *formatting = (char *) malloc (2 * sizeof(char));
+		char *movestart = FIND_MOVESTART(buffer);
+    char *formatting = (char *) malloc (2 * sizeof(char));
 
 		if(movestart && !(strstr(buffer, "{book}")))
 		{

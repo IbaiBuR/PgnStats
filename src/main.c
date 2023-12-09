@@ -61,11 +61,12 @@ int main(int argc, char *argv[])
   getAvgT(f_out, stats);
   getAvgEco(f_out, stats);
 
-  getIndividualBasicStats(f_out, individualStats);
+  getIndividualStats(f_out, individualStats);
 
   fclose(f_in);
   fclose(f_out);
   fclose(stats);
+  fclose(individualStats);
   
   remove("out.txt");
   
