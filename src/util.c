@@ -29,7 +29,7 @@ void getOutputFileName(char *inputFileName, char *outputFileName)
   }
 }
 
-void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
+unsigned getPlayers(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
 {
   char buffer[MAX_MOVES];
   char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
@@ -64,6 +64,7 @@ void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_
   }
 
   rewind(input);
+  return totalPlayerCount;
 }
 
 bool tagIsPresent(FILE *input, char *tagName)
