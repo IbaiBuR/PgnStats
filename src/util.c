@@ -29,6 +29,43 @@ void getOutputFileName(char *inputFileName, char *outputFileName)
     }
 }
 
+void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
+{
+  char buffer[MAX_MOVES];
+  char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+  char blackPlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+  unsigned totalPlayerCount = 0;
+
+  while(fgets(buffer, sizeof(buffer), input))
+  {
+    if(strstr(buffer, "[White "))
+      sscanf(buffer, "[White \"%s\"]", whitePlayerName);
+    if(strstr(buffer, "[Black "))
+      sscanf(buffer, "[Black \"%s\"]", blackPlayerName);
+
+    if(whitePlayerName[0] && blackPlayerName[0])
+    {
+        if(totalPlayerCount < MAX_TOTAL_PLAYERS)
+        {
+            if (!isFound(whitePlayerName, playerNames))
+            {
+                strncpy(playerNames[totalPlayerCount], whitePlayerName, MAX_PLAYER_NAME_LENGTH);
+                playerNames[totalPlayerCount][MAX_PLAYER_NAME_LENGTH - 1] = '\0';
+                totalPlayerCount++;
+            }
+            if (!isFound(blackPlayerName, playerNames))
+            {
+                strncpy(playerNames[totalPlayerCount], blackPlayerName, MAX_PLAYER_NAME_LENGTH);
+                playerNames[totalPlayerCount][MAX_PLAYER_NAME_LENGTH - 1] = '\0';
+                totalPlayerCount++;
+            }
+        }
+    }
+  }
+
+  rewind(input);
+}
+
 bool tagIsPresent(FILE *input, char *tagName)
 {
   char buffer[MAX_MOVES];

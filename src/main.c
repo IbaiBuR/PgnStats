@@ -55,6 +55,7 @@ int main(int argc, char *argv[])
   fclose(f_in);
   fclose(f_out);
   fclose(stats);
+  
   remove("out.txt");
   
   return 0;
