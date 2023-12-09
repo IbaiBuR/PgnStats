@@ -15,6 +15,7 @@ double calculateBlackWinPercentage(unsigned, size_t); // returns the black win p
 double calculateDrawPercentage(unsigned, size_t); // returns the draw percentage
 double calculateWinRate(unsigned, unsigned, size_t); // returns the win rate
 double calculateGamePercentage(size_t, size_t); // returns the game percentage
+unsigned getNumPlayers(FILE *); // returns the number of players in the PGN file
 size_t numGames(FILE *); //returns the total number of games in the PGN file
 
 #endif

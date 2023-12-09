@@ -39,9 +39,9 @@ void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_
   while(fgets(buffer, sizeof(buffer), input))
   {
     if(strstr(buffer, "[White "))
-      sscanf(buffer, "[White \"%s\"]", whitePlayerName);
+      (sscanf(buffer, "[White \"%[^\"]\"]", whitePlayerName));
     if(strstr(buffer, "[Black "))
-      sscanf(buffer, "[Black \"%s\"]", blackPlayerName);
+      (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
 
     if(whitePlayerName[0] && blackPlayerName[0])
     {
