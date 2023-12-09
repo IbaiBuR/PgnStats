@@ -13,7 +13,7 @@ void getIndividualBasicStats(FILE *input, FILE *output)
     unsigned individualWhiteWins[MAX_TOTAL_PLAYERS] = {0};
     unsigned individualBlackWins[MAX_TOTAL_PLAYERS] = {0};
     unsigned individualDraws[MAX_TOTAL_PLAYERS] = {0};
-    unsigned totalPlayerGames[MAX_TOTAL_PLAYERS] = {0};
+    size_t totalPlayerGames[MAX_TOTAL_PLAYERS] = {0};
 
     getPlayerNames(input, playerNames);
 
@@ -63,8 +63,8 @@ void getIndividualBasicStats(FILE *input, FILE *output)
             fprintf(output, "- White wins: %u\n", individualWhiteWins[i]);
             fprintf(output, "- Black wins: %u\n", individualBlackWins[i]);
             fprintf(output, "- Draws: %u\n", individualDraws[i]);
-            fprintf(output, "- Total games: %u\n", totalPlayerGames[i]);
-            fprintf(output, "- Win rate: %.2f%%\n", calculateWinRate(individualWhiteWins[i], individualBlackWins[i]));
+            fprintf(output, "- Total games: %lu\n", totalPlayerGames[i]);
+            fprintf(output, "- Win rate: %.2f%%\n", calculateWinRate(individualWhiteWins[i], individualBlackWins[i], individualDraws[i]));
             fprintf(output, "\n");
         }
     }

@@ -93,3 +93,23 @@ bool isFound(char *playerName, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NA
 
     return found;
 }
+
+double calculateWhiteWinPercentage(unsigned whiteWins, size_t totalGames)
+{
+    return (double)whiteWins / totalGames * 100;
+}
+
+double calculateBlackWinPercentage(unsigned blackWins, size_t totalGames)
+{
+    return (double)blackWins / totalGames * 100;
+}
+
+double calculateDrawPercentage(unsigned draws, size_t totalGames)
+{
+    return (double)draws / totalGames * 100;
+}
+
+double calculateWinRate(unsigned whiteWins, unsigned blackWins, size_t totalGames)
+{
+    return (double)(whiteWins + blackWins) / totalGames * 100;
+}

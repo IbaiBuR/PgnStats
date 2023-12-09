@@ -25,19 +25,22 @@ void getStats(FILE *input, FILE *output)
   rewind(input);
 
   num_games = numGames(input);
-  double whiteWinsPercentage = ((double)white_wins/num_games)*100;
-  double blackWinsPercentage = ((double)black_wins/num_games)*100;
-  double drawPercentage = ((double)draws/num_games)*100;
+  double whiteWinsPercentage = calculateWhiteWinPercentage(white_wins, num_games);
+  double blackWinsPercentage = calculateBlackWinPercentage(black_wins, num_games);
+  double drawPercentage = calculateDrawPercentage(draws, num_games);
+  double winRate = calculateWinRate(white_wins, black_wins, num_games);
 
   printf("The total number of games contained in the pgn file is: %lu\n",num_games);
   printf("The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
   printf("The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
   printf("The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
+  printf("The total win rate is: %.2f%%\n", winRate);
 
   fprintf(output, "The total number of games contained in the pgn file is: %lu\n",num_games);
   fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
   fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
   fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
+  fprintf(output, "The total win rate is: %.2f%%\n", winRate);
 }
 
 void getAvgGD(FILE *input, FILE *output)
