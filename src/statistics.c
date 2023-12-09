@@ -116,7 +116,7 @@ void getAvgD(FILE *input, FILE *output)
   {
     char *movestart = FIND_MOVESTART(buffer);
 
-    if(movestart && !(strstr(buffer,"{book}")))
+    if(movestart && !BOOKMOVE(buffer))
     {
       sscanf(movestart, "{%*f/%u %*f%*c}", &depth);
 

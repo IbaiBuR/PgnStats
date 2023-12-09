@@ -10,7 +10,9 @@
 #define MAX_GAME_END_LINE 12
 #define MAX_PLAYER_NAME_LENGTH 250
 #define MAX_TOTAL_PLAYERS 100
+
 #define FIND_MOVESTART(buffer) strstr(buffer, "{")
+#define BOOKMOVE(buffer) strstr(buffer, "{book}")
 
 typedef struct Players
 {

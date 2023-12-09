@@ -8,7 +8,10 @@
 void getIndividualStats(FILE *input, FILE *output)
 {
     char buffer[MAX_MOVES];
-    bool currentPlayer = false;
+    bool isWhitePlayer = false;
+    bool isBlackPlayer = false;
+    char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+    char blackPlayerName[MAX_PLAYER_NAME_LENGTH] = "";
     Players players;
 
     unsigned totalPlayers = getPlayers(input, players.playerNames);
@@ -18,26 +21,42 @@ void getIndividualStats(FILE *input, FILE *output)
     {
         while(fgets(buffer, sizeof(buffer), input))
         {
-            if(strstr(buffer, players.playerNames[i]))
-                currentPlayer = true;
+            if(strstr(buffer, "[White "))
+              (sscanf(buffer, "[White \"%[^\"]\"]", whitePlayerName));
+            if(strstr(buffer, "[Black "))
+              (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
+
+            if(strstr(buffer, whitePlayerName))
+            {
+                if(strstr(whitePlayerName, players.playerNames[i]))
+                    isWhitePlayer = true;
+                else
+                    isWhitePlayer = false;
+            }
+            else if(strstr(buffer, blackPlayerName))
+            {
+                if(strstr(blackPlayerName, players.playerNames[i]))
+                    isBlackPlayer = true;
+                else
+                    isBlackPlayer = false;
+            }
             
-            if(strstr(buffer, "1-0") && currentPlayer)
+            if(strstr(buffer, "1-0") && isWhitePlayer)
             {
                 players.individualWhiteWins[i]++;
-                players.totalPlayerGames[i]++;
-                currentPlayer = false;
             }
-            else if(strstr(buffer, "0-1") && currentPlayer)
+            else if(strstr(buffer, "0-1") && isBlackPlayer)
             {
                 players.individualBlackWins[i]++;
-                players.totalPlayerGames[i]++;
-                currentPlayer = false;
             }
-            else if(strstr(buffer, "1/2-1/2") && currentPlayer)
+            else if(strstr(buffer, "1/2-1/2") && (isWhitePlayer || isBlackPlayer))
             {
                 players.individualDraws[i]++;
+            }
+            
+            if((strstr(buffer, "1-0") || strstr(buffer, "0-1") || strstr(buffer, "1/2-1/2")) && (isWhitePlayer || isBlackPlayer))
+            {
                 players.totalPlayerGames[i]++;
-                currentPlayer = false;
             }
         }
         rewind(input);
@@ -51,7 +70,11 @@ void getIndividualStats(FILE *input, FILE *output)
 unsigned * getIndividualAverageDepth(FILE *input, Players *players)
 {
     char buffer[MAX_MOVES];
-    bool currentPlayer = false;
+    bool isWhitePlayer = false;
+    bool isBlackPlayer = false;
+    bool isWhiteTurn = true;
+    char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+    char blackPlayerName[MAX_PLAYER_NAME_LENGTH] = "";
     unsigned currentDepth = 0;
     unsigned individualTotalDepth[players->totalPlayers];
     unsigned move_count;
@@ -59,20 +82,49 @@ unsigned * getIndividualAverageDepth(FILE *input, Players *players)
     for(int i = 0; i < players->totalPlayers; i++)
     {
         move_count = 0;
+        individualTotalDepth[i] = 0;
+        printf("Calculating average depth for player %s...\n", players->playerNames[i]);
+
         while(fgets(buffer, sizeof(buffer), input))
         {
-            if(strstr(buffer, players->playerNames[i]))
-                currentPlayer = true;
-            
+        
+            if(strstr(buffer, "[White "))
+              (sscanf(buffer, "[White \"%[^\"]\"]", whitePlayerName));
+            if(strstr(buffer, "[Black "))
+              (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
+
+            if(strstr(buffer, whitePlayerName))
+            {
+                if(strstr(whitePlayerName, players->playerNames[i]))
+                    isWhitePlayer = true;
+                else
+                    isWhitePlayer = false;
+            }
+            else if(strstr(buffer, blackPlayerName))
+            {
+                if(strstr(blackPlayerName, players->playerNames[i]))
+                    isBlackPlayer = true;
+                else
+                    isBlackPlayer = false;
+            }
+
             char *movestart = FIND_MOVESTART(buffer);
 
-            if(movestart && currentPlayer && !(strstr(buffer, "{book}")))
+            if(movestart && !BOOKMOVE(buffer))
             {
-                sscanf(movestart, "{%*f/%u %*f%*c}", &currentDepth);
-                individualTotalDepth[i] += currentDepth;
-                move_count++;
+                move_count = isWhiteTurn ? move_count + 1 : move_count;
+
+                if((isWhitePlayer && isWhiteTurn) || (isBlackPlayer && !isWhiteTurn))
+                {
+                    sscanf(movestart, "{%*f/%u %*f%*c}", &currentDepth);
+                    individualTotalDepth[i] += currentDepth;
+                    printf("Current depth: %u\n", currentDepth);
+                }
             }
+            isWhiteTurn = !isWhiteTurn;
         }
+
+        printf("Move count: %u\n", move_count);
         players->individualAverageDepth[i] = individualTotalDepth[i] / move_count;
         rewind(input);
     }
