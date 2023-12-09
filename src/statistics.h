@@ -11,6 +11,5 @@ void getAvgPC(FILE *, FILE *); //gets the average PlyCount of the input pgn file
 void getAvgD(FILE *, FILE *); //gets the average depth per move of the input pgn file
 void getAvgT(FILE *, FILE *); //gets the average time per move of the input pgn file
 void getAvgEco(FILE *, FILE *); //gets the average eco code distribution of the input pgn file
-size_t numGames(FILE *); //returns the total number of games in the PGN file
 
 #endif

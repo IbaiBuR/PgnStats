@@ -175,22 +175,6 @@ void getAvgT(FILE *input, FILE *output)
     printf("Could not parse the average time per move\n");
 }
 
-size_t numGames(FILE *input)
-{
-  char lines[MAX_MOVES];
-  size_t games = 0;
-
-  while(fgets(lines, sizeof(lines), input))
-  {
-    if(strstr(lines, "[White "))
-      games++;
-  }
-
-  rewind(input);
-
-  return games;
-}
-
 void getAvgEco(FILE *input, FILE *output)
 {
   unsigned ECO_CODES[NUM_ECOS] = {0};

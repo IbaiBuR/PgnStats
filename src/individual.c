@@ -52,6 +52,7 @@ void getIndividualBasicStats(FILE *input, FILE *output)
     }
 
     rewind(input);
+    size_t totalGames = numGames(input);
     fprintf(output, "Individual statistics for each player:\n");
     fprintf(output, "--------------------------------------\n");
 
@@ -60,10 +61,10 @@ void getIndividualBasicStats(FILE *input, FILE *output)
         if(playerNames[i])
         {
             fprintf(output, "- Player: %s\n", playerNames[i]);
-            fprintf(output, "- White wins: %u\n", individualWhiteWins[i]);
-            fprintf(output, "- Black wins: %u\n", individualBlackWins[i]);
-            fprintf(output, "- Draws: %u\n", individualDraws[i]);
-            fprintf(output, "- Total games: %lu\n", totalPlayerGames[i]);
+            fprintf(output, "- White wins: %u (%.2f%%) \n", individualWhiteWins[i], calculateWhiteWinPercentage(individualWhiteWins[i], totalPlayerGames[i]));
+            fprintf(output, "- Black wins: %u (%.2f%%) \n", individualBlackWins[i], calculateBlackWinPercentage(individualBlackWins[i], totalPlayerGames[i]));
+            fprintf(output, "- Draws: %u (%.2f%%) \n", individualDraws[i], calculateDrawPercentage(individualDraws[i], totalPlayerGames[i]));
+            fprintf(output, "- Total games: %lu (%.2f%%) \n", totalPlayerGames[i], calculateGamePercentage(totalPlayerGames[i], totalGames));
             fprintf(output, "- Win rate: %.2f%%\n", calculateWinRate(individualWhiteWins[i], individualBlackWins[i], individualDraws[i]));
             fprintf(output, "\n");
         }

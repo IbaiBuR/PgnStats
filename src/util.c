@@ -19,14 +19,14 @@ void deleteTags(FILE *input, FILE *output)
 
 void getOutputFileName(char *inputFileName, char *outputFileName)
 {
-    strncpy(outputFileName, inputFileName, FILENAME_LENGTH);
-    char *pospoint = strstr(outputFileName, ".");
+  strncpy(outputFileName, inputFileName, FILENAME_LENGTH);
+  char *pospoint = strstr(outputFileName, ".");
 
-    if (pospoint != NULL) 
-    {
-        *pospoint = '\0';
-        strncat(outputFileName, ".txt", FILENAME_LENGTH - strlen(outputFileName));
-    }
+  if (pospoint != NULL) 
+  {
+    *pospoint = '\0';
+    strncat(outputFileName, ".txt", FILENAME_LENGTH - strlen(outputFileName));
+  }
 }
 
 void getPlayerNames(FILE *input, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
@@ -83,33 +83,54 @@ bool tagIsPresent(FILE *input, char *tagName)
 
 bool isFound(char *playerName, char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH])
 {
-    bool found = false;
+  bool found = false;
 
-    for(int i = 0; i < MAX_TOTAL_PLAYERS && !found; i++)
-    {
-        if(strcmp(playerName, playerNames[i]) == 0)
-            found = true;
-    }
+  for(int i = 0; i < MAX_TOTAL_PLAYERS && !found; i++)
+  {
+    if(strcmp(playerName, playerNames[i]) == 0)
+      found = true;
+  }
 
-    return found;
+  return found;
 }
 
 double calculateWhiteWinPercentage(unsigned whiteWins, size_t totalGames)
 {
-    return (double)whiteWins / totalGames * 100;
+  return (double)whiteWins / totalGames * 100;
 }
 
 double calculateBlackWinPercentage(unsigned blackWins, size_t totalGames)
 {
-    return (double)blackWins / totalGames * 100;
+  return (double)blackWins / totalGames * 100;
 }
 
 double calculateDrawPercentage(unsigned draws, size_t totalGames)
 {
-    return (double)draws / totalGames * 100;
+  return (double)draws / totalGames * 100;
 }
 
 double calculateWinRate(unsigned whiteWins, unsigned blackWins, size_t totalGames)
 {
-    return (double)(whiteWins + blackWins) / totalGames * 100;
+  return (double)(whiteWins + blackWins) / totalGames * 100;
+}
+
+double calculateGamePercentage(size_t totalGames, size_t totalGamesInFile)
+{
+  return (double)totalGames / totalGamesInFile * 100;
+}
+
+size_t numGames(FILE *input)
+{
+  char lines[MAX_MOVES];
+  size_t games = 0;
+
+  while(fgets(lines, sizeof(lines), input))
+  {
+    if(strstr(lines, "[White "))
+      games++;
+  }
+
+  rewind(input);
+
+  return games;
 }
