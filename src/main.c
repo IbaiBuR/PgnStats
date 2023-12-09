@@ -2,10 +2,11 @@
 #include "types.h"
 #include "util.h"
 #include "statistics.h"
+#include "individual.h"
 
 int main(int argc, char *argv[])
 {
-  FILE *f_in, *f_out, *stats;
+  FILE *f_in, *f_out, *stats, *individualStats;
   char nomfich[FILENAME_LENGTH];
   
   if(argc < 2)
@@ -45,12 +46,22 @@ int main(int argc, char *argv[])
     return 5;
   }
 
+  if(!(individualStats=fopen("individual_statistics.txt","w")))
+  {
+    printf("Could not access the specified file.\n");
+    fclose(f_out);
+    fclose(stats);
+    return 6;
+  }
+
   getStats(f_out, stats);
   getAvgGD(f_out, stats);
   getAvgPC(f_out, stats);
   getAvgD(f_out, stats);
   getAvgT(f_out, stats);
   getAvgEco(f_out, stats);
+
+  getIndividualBasicStats(f_out, individualStats);
 
   fclose(f_in);
   fclose(f_out);
