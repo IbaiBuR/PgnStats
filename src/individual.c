@@ -44,26 +44,8 @@ void getIndividualStats(FILE *input, FILE *output)
     }
 
     rewind(input);
-    size_t totalGames = numGames(input);
-
-    fprintf(output, "Individual statistics for each player\n");
-    fprintf(output, "=====================================\n");
-    fprintf(output, "\nThere are exactly %u players in the PGN file:\n\n", totalPlayers);
-    
-    for (int i = 0; i < totalPlayers; i++)
-    {
-        fprintf(output, "- Player: %-20s\n", players.playerNames[i]);
-        fprintf(output, "\t·White wins : %-5u (%.2f%%)\n", players.individualWhiteWins[i], calculateWhiteWinPercentage(players.individualWhiteWins[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Black wins : %-5u (%.2f%%)\n", players.individualBlackWins[i], calculateBlackWinPercentage(players.individualBlackWins[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Draws      : %-5u (%.2f%%)\n", players.individualDraws[i], calculateDrawPercentage(players.individualDraws[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Total games: %-5lu (%.2f%%)\n", players.totalPlayerGames[i], calculateGamePercentage(players.totalPlayerGames[i], totalGames));
-        fprintf(output, "\t·Win rate   : %.2f%%\n", calculateWinRate(players.individualWhiteWins[i], players.individualBlackWins[i], players.totalPlayerGames[i]));
-    
-        if (i + 1 != totalPlayers)
-            fprintf(output, "\n------------------------------\n\n");
-        else
-            fprintf(output, "\n==============================");
-    }
+    getIndividualAverageDepth(input, &players);
+    printIndividualStats(players, output, numGames(input));
 }
 
 unsigned * getIndividualAverageDepth(FILE *input, Players *players)
@@ -72,10 +54,11 @@ unsigned * getIndividualAverageDepth(FILE *input, Players *players)
     bool currentPlayer = false;
     unsigned currentDepth = 0;
     unsigned individualTotalDepth[players->totalPlayers];
-    unsigned move_count = 0;
+    unsigned move_count;
 
     for(int i = 0; i < players->totalPlayers; i++)
     {
+        move_count = 0;
         while(fgets(buffer, sizeof(buffer), input))
         {
             if(strstr(buffer, players->playerNames[i]))
@@ -90,11 +73,32 @@ unsigned * getIndividualAverageDepth(FILE *input, Players *players)
                 move_count++;
             }
         }
+        players->individualAverageDepth[i] = individualTotalDepth[i] / move_count;
         rewind(input);
     }
 
-    for(int i = 0; i < players->totalPlayers; i++)
-        players->individualAverageDepth[i] = individualTotalDepth[i] / move_count;
-
     return players->individualAverageDepth;
+}
+
+void printIndividualStats(Players players, FILE *output, size_t totalGames)
+{
+    fprintf(output, "Individual statistics for each player\n");
+    fprintf(output, "=====================================\n");
+    fprintf(output, "\nThere are exactly %u players in the PGN file:\n\n", players.totalPlayers);
+    
+    for (int i = 0; i < players.totalPlayers; i++)
+    {
+        fprintf(output, "- Player: %-20s\n", players.playerNames[i]);
+        fprintf(output, "\t·White wins : %-5u (%.2f%%)\n", players.individualWhiteWins[i], calculateWhiteWinPercentage(players.individualWhiteWins[i], players.totalPlayerGames[i]));
+        fprintf(output, "\t·Black wins : %-5u (%.2f%%)\n", players.individualBlackWins[i], calculateBlackWinPercentage(players.individualBlackWins[i], players.totalPlayerGames[i]));
+        fprintf(output, "\t·Draws      : %-5u (%.2f%%)\n", players.individualDraws[i], calculateDrawPercentage(players.individualDraws[i], players.totalPlayerGames[i]));
+        fprintf(output, "\t·Total games: %-5lu (%.2f%%)\n", players.totalPlayerGames[i], calculateGamePercentage(players.totalPlayerGames[i], totalGames));
+        fprintf(output, "\t·Win rate   : %.2f%%\n", calculateWinRate(players.individualWhiteWins[i], players.individualBlackWins[i], players.totalPlayerGames[i]));
+        fprintf(output, "\t·Avg. Depth : %-5u\n", players.individualAverageDepth[i]);
+    
+        if (i + 1 != players.totalPlayers)
+            fprintf(output, "\n------------------------------\n\n");
+        else
+            fprintf(output, "\n==============================");
+    }
 }
