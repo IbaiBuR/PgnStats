@@ -66,9 +66,6 @@ void getAverageGameDuration(FILE *input, Statistics *statistics)
         rewind(input);
         statistics->averageGameDuration = (double) totalDuration / statistics->numGames;
     }
-    else
-        printf("The GameDuration tag was not found\n");
-
 }
 
 void getAveragePlyCount(FILE *input, Statistics *statistics)
@@ -90,8 +87,6 @@ void getAveragePlyCount(FILE *input, Statistics *statistics)
         statistics->averagePlyCount = totalPlyCount / statistics->numGames;
         rewind(input);
     }
-    else
-        printf("The PlyCount tag was not found\n");
 
 }
 
@@ -182,8 +177,6 @@ void getAverageEco(FILE *input, Statistics *statistics)
             statistics->ecoCodeGames[i] = ECO_CODES[i];
         }
     }
-    else
-        printf("The ECO tag was not found\n");
 }
 
 void printOverallStats(Statistics statistics, FILE *output)
