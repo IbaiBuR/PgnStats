@@ -62,7 +62,7 @@ void getIndividualStats(FILE *input, FILE *output)
     printIndividualStats(players, output, numGames(input));
 }
 
-unsigned * getIndividualAverageDepth(FILE *input, Players *players)
+void getIndividualAverageDepth(FILE *input, Players *players)
 {
     char buffer[MAX_MOVES];
     bool isWhitePlayer = false;
@@ -125,7 +125,7 @@ unsigned * getIndividualAverageDepth(FILE *input, Players *players)
         rewind(input);
     }
 
-    return players->individualAverageDepth;
+    rewind(input);
 }
 
 void printIndividualStats(Players players, FILE *output, size_t totalGames)

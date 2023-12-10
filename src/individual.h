@@ -6,6 +6,6 @@
 
 void getIndividualStats(FILE *, FILE *); // gets some basic statistics for each player in the file
 void printIndividualStats(Players, FILE *, size_t); // prints the statistics for each player in the file
-unsigned * getIndividualAverageDepth(FILE *, Players *); // gets the average depth for each player in the file
+void getIndividualAverageDepth(FILE *, Players *); // gets the average depth for each player in the file
 
 #endif
