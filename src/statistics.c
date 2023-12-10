@@ -149,34 +149,41 @@ void getAverageDepth(FILE *input, FILE *output)
 void getAverageTimePerMove(FILE *input, FILE *output)
 {
 	char buffer[MAX_MOVES];
-	float time, total_time = 0;
-	unsigned move_count = 0;
-	double avgtime;
   char *formatting = (char *) malloc (2 * sizeof(char));
+	float time;
+  double averageTime, totalTime = 0;
+	size_t move_count = 0;
 
 	while(fgets(buffer,sizeof(buffer),input))
 	{
 		char *movestart = FIND_MOVESTART(buffer);
+    char *bookMove = BOOKMOVE(buffer);
 
-		if(movestart && !(strstr(buffer, "{book}")))
+		while(movestart)
 		{
-			sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
+      if(!bookMove)
+      {
+        move_count++;
+			  sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
 
-      if(strncmp(formatting, "ms", 2) == 0)
-        time /= 1000.0;
+        if(strncmp(formatting, "ms", 2) == 0)
+          time /= 1000.0;
 
-			total_time += time; 			
-			move_count++;
+			  totalTime += time; 			
+      }
+
+      movestart = strstr(movestart + 1, "{");
+      bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
 		}
 	}
 
   rewind(input);
-  avgtime = (double)total_time / move_count;
+  averageTime = (double)totalTime / move_count;
   
-  if(avgtime)
+  if(averageTime)
   {
-    printf("The average time per move is: %.2f seconds \n",avgtime);
-    fprintf(output, "The average time per move is: %.2f seconds \n",avgtime);
+    printf("The average time per move is: %.2f seconds \n",averageTime);
+    fprintf(output, "The average time per move is: %.2f seconds \n",averageTime);
   }
   else
     printf("Could not parse the average time per move\n");
