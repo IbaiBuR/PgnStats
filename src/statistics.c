@@ -110,29 +110,36 @@ void getAveragePlyCount(FILE *input, FILE *output)
 void getAverageDepth(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
-  unsigned depth, avgdepth, total_depth = 0, move_count = 0;
+  unsigned currentDepth, averageDepth;
+  size_t totalDepth = 0, move_count = 0;
 
   while(fgets(buffer,sizeof(buffer),input))
   {
     char *movestart = FIND_MOVESTART(buffer);
+    char *bookMove = BOOKMOVE(buffer);
 
-    if(movestart && !BOOKMOVE(buffer))
+    while(movestart)
     {
-      sscanf(movestart, "{%*f/%u %*f%*c}", &depth);
+      if(!bookMove)
+      {
+        move_count++;
+        sscanf(movestart, "{%*[^/]/%u", &currentDepth);
+        totalDepth += currentDepth;
+      }
 
-      total_depth += depth;
-      move_count++;
+      movestart = strstr(movestart + 1, "{");
+      bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
     }
   }
 
   rewind(input);
 
-  avgdepth = total_depth / move_count;
+  averageDepth = totalDepth / move_count;
 
-  if(avgdepth)
+  if(averageDepth)
   {
-    printf("The average depth per move is: %u\n",avgdepth);
-    fprintf(output, "The average depth per move is: %u\n",avgdepth);
+    printf("The average depth per move is: %u\n",averageDepth);
+    fprintf(output, "The average depth per move is: %u\n",averageDepth);
   }
   else
     printf("Could not parse the average depth per move\n");
@@ -146,7 +153,7 @@ void getAverageTimePerMove(FILE *input, FILE *output)
 	unsigned move_count = 0;
 	double avgtime;
   char *formatting = (char *) malloc (2 * sizeof(char));
-  
+
 	while(fgets(buffer,sizeof(buffer),input))
 	{
 		char *movestart = FIND_MOVESTART(buffer);

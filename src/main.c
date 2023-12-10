@@ -54,9 +54,9 @@ int main(int argc, char *argv[])
 
   getOverallStats(f_out, stats);
   getAverageGameDuration(f_out, stats);
-  getAverageGameDuration(f_out, stats);
+  getAveragePlyCount(f_out, stats);
   getAverageDepth(f_out, stats);
-  getAvgTimePerMove(f_out, stats);
+  getAverageTimePerMove(f_out, stats);
   getAverageEco(f_out, stats);
 
   getIndividualStats(f_out, individualStats);
