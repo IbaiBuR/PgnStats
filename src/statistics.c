@@ -5,7 +5,7 @@
 #include "statistics.h"
 #include "util.h"
 
-void getStats(FILE *input, FILE *output)
+void getOverallStats(FILE *input, FILE *output)
 {
   char line[MAX_MOVES];
   unsigned white_wins = 0, black_wins = 0, draws = 0;
@@ -43,7 +43,7 @@ void getStats(FILE *input, FILE *output)
   fprintf(output, "The total win rate is: %.2f%%\n", winRate);
 }
 
-void getAvgGD(FILE *input, FILE *output)
+void getAverageGameDuration(FILE *input, FILE *output)
 {
     char buffer[MAX_MOVES];
     double total_duration = 0;
@@ -81,7 +81,7 @@ void getAvgGD(FILE *input, FILE *output)
     
 }
 
-void getAvgPC(FILE *input, FILE *output)
+void getAveragePlyCount(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   unsigned total_plycount = 0, plycount, average_plycount;
@@ -107,7 +107,7 @@ void getAvgPC(FILE *input, FILE *output)
 
 }
 
-void getAvgD(FILE *input, FILE *output)
+void getAverageDepth(FILE *input, FILE *output)
 {
   char buffer[MAX_MOVES];
   unsigned depth, avgdepth, total_depth = 0, move_count = 0;
@@ -139,17 +139,17 @@ void getAvgD(FILE *input, FILE *output)
     
 }
 
-void getAvgT(FILE *input, FILE *output)
+void getAverageTimePerMove(FILE *input, FILE *output)
 {
 	char buffer[MAX_MOVES];
 	float time, total_time = 0;
 	unsigned move_count = 0;
 	double avgtime;
-
+  char *formatting = (char *) malloc (2 * sizeof(char));
+  
 	while(fgets(buffer,sizeof(buffer),input))
 	{
 		char *movestart = FIND_MOVESTART(buffer);
-    char *formatting = (char *) malloc (2 * sizeof(char));
 
 		if(movestart && !(strstr(buffer, "{book}")))
 		{
@@ -175,7 +175,7 @@ void getAvgT(FILE *input, FILE *output)
     printf("Could not parse the average time per move\n");
 }
 
-void getAvgEco(FILE *input, FILE *output)
+void getAverageEco(FILE *input, FILE *output)
 {
   unsigned ECO_CODES[NUM_ECOS] = {0};
   char eco_letter;

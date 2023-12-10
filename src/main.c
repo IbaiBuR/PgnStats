@@ -52,12 +52,12 @@ int main(int argc, char *argv[])
     return EXIT_FAILURE + 5;
   }
 
-  getStats(f_out, stats);
-  getAvgGD(f_out, stats);
-  getAvgPC(f_out, stats);
-  getAvgD(f_out, stats);
-  getAvgT(f_out, stats);
-  getAvgEco(f_out, stats);
+  getOverallStats(f_out, stats);
+  getAverageGameDuration(f_out, stats);
+  getAverageGameDuration(f_out, stats);
+  getAverageDepth(f_out, stats);
+  getAvgTimePerMove(f_out, stats);
+  getAverageEco(f_out, stats);
 
   getIndividualStats(f_out, individualStats);
 
