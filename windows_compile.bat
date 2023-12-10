@@ -1,4 +1,3 @@
-cd \src
-gcc -c main.c statistics.c util.c individual.c
-gcc -o PgnStats main.o statistics.o util.o individual.o
+cd src
+gcc -I C:\msys64\mingw64\include\ncurses -o PgnStats main.c statistics.c util.c individual.c -lncurses -L C:\msys64\mingw64\bin -DNCURSES_STATIC
 del *.o

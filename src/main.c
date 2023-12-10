@@ -1,10 +1,15 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <ncurses.h>
 #include "types.h"
 #include "util.h"
 #include "statistics.h"
 #include "individual.h"
+
+#ifdef _WIN32
+#include <ncurses/ncurses.h>
+#else
+#include <ncurses.h>
+#endif
 
 int main(int argc, char *argv[])
 {
