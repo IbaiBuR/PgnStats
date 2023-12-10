@@ -6,7 +6,7 @@
 #include "individual.h"
 
 #ifdef _WIN32
-#include <ncurses/ncurses.h>
+#include <ncursesw/ncurses.h>
 #else
 #include <ncurses.h>
 #endif
