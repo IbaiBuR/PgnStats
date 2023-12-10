@@ -4,4 +4,6 @@
 .idea/*
 .vscode/*
 /pgn
+/cmake-build-debug/*
+CMakeLists.txt
 PgnStats

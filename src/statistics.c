@@ -7,46 +7,41 @@
 
 void getOverallStats(FILE *input, FILE *output)
 {
-  char line[MAX_MOVES];
-  unsigned white_wins = 0, black_wins = 0, draws = 0;
-  size_t num_games = 0;
+    char line[MAX_MOVES];
+    Statistics pgnStats;
 
-  while(fgets(line,sizeof(line),input))
-  {
-    if(strstr(line,"1/2-1/2"))
-      draws++;
-    else if(strstr(line,"1-0"))
-      white_wins++;
-    else if(strstr(line,"0-1"))
-      black_wins++;
-  }
+    initializeStatistics(&pgnStats);
 
-  
-  rewind(input);
+    while (fgets(line, sizeof(line), input))
+    {
+        if (strstr(line, "1/2-1/2"))
+            pgnStats.draws++;
+        else if (strstr(line, "1-0"))
+            pgnStats.white_wins++;
+        else if (strstr(line, "0-1"))
+            pgnStats.black_wins++;
+    }
 
-  num_games = numGames(input);
-  double whiteWinsPercentage = calculateWhiteWinPercentage(white_wins, num_games);
-  double blackWinsPercentage = calculateBlackWinPercentage(black_wins, num_games);
-  double drawPercentage = calculateDrawPercentage(draws, num_games);
-  double winRate = calculateWinRate(white_wins, black_wins, num_games);
+    rewind(input);
 
-  printf("The total number of games contained in the pgn file is: %lu\n",num_games);
-  printf("The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
-  printf("The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
-  printf("The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
-  printf("The total win rate is: %.2f%%\n", winRate);
+    pgnStats.numGames = numGames(input);
+    pgnStats.noBookMoveCount = noBookMoveCount(input);
+    pgnStats.totalMoveCount = totalMoveCount(input);
 
-  fprintf(output, "The total number of games contained in the pgn file is: %lu\n",num_games);
-  fprintf(output, "The number of draws is: %u (%.2f%%)\n",draws, drawPercentage);
-  fprintf(output, "The number of white wins is: %u (%.2f%%)\n",white_wins, whiteWinsPercentage);
-  fprintf(output, "The number of black wins is: %u (%.2f%%)\n",black_wins, blackWinsPercentage);
-  fprintf(output, "The total win rate is: %.2f%%\n", winRate);
+    getAverageGameDuration(input, &pgnStats);
+    getAveragePlyCount(input, &pgnStats);
+    getAverageDepth(input, &pgnStats);
+    getAverageTimePerMove(input, &pgnStats);
+    getAverageEco(input, &pgnStats);
+
+    printOverallStats(pgnStats, output);
+
 }
 
-void getAverageGameDuration(FILE *input, FILE *output)
+void getAverageGameDuration(FILE *input, Statistics *statistics)
 {
     char buffer[MAX_MOVES];
-    double total_duration = 0;
+    double duration, totalDuration = 0;
 
     if (tagIsPresent(input, "[GameDuration "))
     {
@@ -63,163 +58,165 @@ void getAverageGameDuration(FILE *input, FILE *output)
                 int seconds = atoi(strtok(NULL, ":"));
 
                 // Convert the duration to seconds
-                double duration = hours * 3600 + minutes * 60 + seconds;
-
-                // Add the duration to the total duration 
-                total_duration += duration;
+                duration = hours * 3600 + minutes * 60 + seconds;
+                totalDuration += duration;
             }
         }
-        
-      rewind(input);
-      double average_duration = total_duration / numGames(input);
 
-      printf("The average game duration is: %.2f seconds\n", average_duration);
-      fprintf(output, "The average game duration is: %.2f seconds\n", average_duration);
+        rewind(input);
+        statistics->averageGameDuration = totalDuration / statistics->numGames;
     }
     else
-      printf("The GameDuration tag was not found\n");
-    
+        printf("The GameDuration tag was not found\n");
+
 }
 
-void getAveragePlyCount(FILE *input, FILE *output)
+void getAveragePlyCount(FILE *input, Statistics *statistics)
 {
-  char buffer[MAX_MOVES];
-  unsigned total_plycount = 0, plycount, average_plycount;
+    char buffer[MAX_MOVES];
+    unsigned totalPlyCount = 0, plyCount;
 
-  if(tagIsPresent(input, "[PlyCount "))
-  {
-    while(fgets(buffer,sizeof(buffer),input))
+    if (tagIsPresent(input, "[PlyCount "))
     {
-      if(strstr(buffer,"[PlyCount "))
-      {
-        sscanf(buffer, "[PlyCount \"%u\"]", &plycount);
-        total_plycount += plycount;
-      }
+        while (fgets(buffer, sizeof(buffer), input))
+        {
+            if (strstr(buffer, "[PlyCount "))
+            {
+                sscanf(buffer, "[PlyCount \"%u\"]", &plyCount);
+                totalPlyCount += plyCount;
+            }
+        }
+
+        statistics->averagePlyCount = totalPlyCount / numGames(input);
+        rewind(input);
     }
-    
-    rewind(input);
-    average_plycount = total_plycount / numGames(input);
-    printf("The average plycount is: %2d\n", average_plycount);
-    fprintf(output, "The average plycount is: %2d\n", average_plycount);
-  }
-  else
-    printf("The PlyCount tag was not found\n");
+    else
+        printf("The PlyCount tag was not found\n");
 
 }
 
-void getAverageDepth(FILE *input, FILE *output)
+void getAverageDepth(FILE *input, Statistics *statistics)
 {
-  char buffer[MAX_MOVES];
-  unsigned currentDepth, averageDepth;
-  size_t totalDepth = 0, move_count = 0;
+    char buffer[MAX_MOVES];
+    unsigned currentDepth;
+    size_t totalDepth = 0;
 
-  while(fgets(buffer,sizeof(buffer),input))
-  {
-    char *movestart = FIND_MOVESTART(buffer);
-    char *bookMove = BOOKMOVE(buffer);
-
-    while(movestart)
+    while (fgets(buffer, sizeof(buffer), input))
     {
-      if(!bookMove)
-      {
-        move_count++;
-        sscanf(movestart, "{%*[^/]/%u", &currentDepth);
-        totalDepth += currentDepth;
-      }
+        char *movestart = FIND_MOVESTART(buffer);
+        char *bookMove = BOOKMOVE(buffer);
 
-      movestart = strstr(movestart + 1, "{");
-      bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
-    }
-  }
+        while (movestart)
+        {
+            if (!bookMove)
+            {
+                sscanf(movestart, "{%*[^/]/%u", &currentDepth);
+                totalDepth += currentDepth;
+            }
 
-  rewind(input);
-
-  averageDepth = totalDepth / move_count;
-
-  if(averageDepth)
-  {
-    printf("The average depth per move is: %u\n",averageDepth);
-    fprintf(output, "The average depth per move is: %u\n",averageDepth);
-  }
-  else
-    printf("Could not parse the average depth per move\n");
-    
-}
-
-void getAverageTimePerMove(FILE *input, FILE *output)
-{
-	char buffer[MAX_MOVES];
-  char *formatting = (char *) malloc (2 * sizeof(char));
-	float time;
-  double averageTime, totalTime = 0;
-	size_t move_count = 0;
-
-	while(fgets(buffer,sizeof(buffer),input))
-	{
-		char *movestart = FIND_MOVESTART(buffer);
-    char *bookMove = BOOKMOVE(buffer);
-
-		while(movestart)
-		{
-      if(!bookMove)
-      {
-        move_count++;
-			  sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
-
-        if(strncmp(formatting, "ms", 2) == 0)
-          time /= 1000.0;
-
-			  totalTime += time; 			
-      }
-
-      movestart = strstr(movestart + 1, "{");
-      bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
-		}
-	}
-
-  rewind(input);
-  averageTime = (double)totalTime / move_count;
-  
-  if(averageTime)
-  {
-    printf("The average time per move is: %.2f seconds \n",averageTime);
-    fprintf(output, "The average time per move is: %.2f seconds \n",averageTime);
-  }
-  else
-    printf("Could not parse the average time per move\n");
-}
-
-void getAverageEco(FILE *input, FILE *output)
-{
-  unsigned ECO_CODES[NUM_ECOS] = {0};
-  char eco_letter;
-  char buffer[MAX_MOVES];
-  size_t num_games;
-
-  if(tagIsPresent(input, "[ECO "))
-  {
-    while(fgets(buffer, sizeof(buffer), input))
-    {
-      if(strstr(buffer, "[ECO "))
-      {
-        sscanf(buffer, "[ECO \"%c%*c%*c\"]", &eco_letter);
-        ECO_CODES[eco_letter - 'A' + 0]++;
-      }
+            movestart = strstr(movestart + 1, "{");
+            bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
+        }
     }
 
     rewind(input);
-    num_games = numGames(input);
-    double eco_percentages[5];
 
-    for (int i = 0; i < 5; i++)
-      eco_percentages[i] = ((double)ECO_CODES[i]/num_games * 100);
-    
-    for (int i = 0; i < 5; i++) 
+    statistics->averageDepth = totalDepth / statistics->noBookMoveCount;
+}
+
+void getAverageTimePerMove(FILE *input, Statistics *statistics)
+{
+    char buffer[MAX_MOVES];
+    char *formatting = (char *) malloc(2 * sizeof(char));
+    float time;
+    double totalTime = 0;
+
+    while (fgets(buffer, sizeof(buffer), input))
     {
-      printf("There are %u eco %c games (%.2f%%)\n", ECO_CODES[i], 'A' + i, eco_percentages[i]);
-      fprintf(output, "There are %u eco %c games (%.2f%%)\n", ECO_CODES[i], 'A' + i, eco_percentages[i]);
+        char *movestart = FIND_MOVESTART(buffer);
+        char *bookMove = BOOKMOVE(buffer);
+
+        while (movestart)
+        {
+            if (!bookMove)
+            {
+                sscanf(movestart, "{%*f/%*u %f%2s}", &time, formatting);
+
+                if (strncmp(formatting, "ms", 2) == 0)
+                    time /= 1000.0;
+
+                totalTime += time;
+            }
+
+            movestart = strstr(movestart + 1, "{");
+            bookMove = bookMove ? strstr(bookMove + 1, "{book}") : NULL;
+        }
     }
-  }
-  else
-    printf("The ECO tag was not found\n");
+
+    rewind(input);
+    statistics->averageTimePerMove = (double) totalTime / statistics->noBookMoveCount;
+}
+
+void getAverageEco(FILE *input, Statistics *statistics)
+{
+    unsigned ECO_CODES[NUM_ECOS] = {0};
+    char eco_letter;
+    char buffer[MAX_MOVES];
+
+    if (tagIsPresent(input, "[ECO "))
+    {
+        while (fgets(buffer, sizeof(buffer), input))
+        {
+            if (strstr(buffer, "[ECO "))
+            {
+                sscanf(buffer, "[ECO \"%c%*c%*c\"]", &eco_letter);
+                ECO_CODES[eco_letter - 'A' + 0]++;
+            }
+        }
+
+        rewind(input);
+
+        for (int i = 0; i < 5; i++)
+        {
+            statistics->averageEcoCodes[i] = ((double) ECO_CODES[i] / statistics->numGames * 100);
+            statistics->ecoCodeGames[i] = ECO_CODES[i];
+        }
+    }
+    else
+        printf("The ECO tag was not found\n");
+}
+
+void printOverallStats(Statistics statistics, FILE *output)
+{
+    double whiteWinPercentage = calculateWhiteWinPercentage(statistics.white_wins, statistics.numGames);
+    double blackWinPercentage = calculateBlackWinPercentage(statistics.black_wins, statistics.numGames);
+    double drawPercentage = calculateDrawPercentage(statistics.draws, statistics.numGames);
+    double winRate = calculateWinRate(statistics.white_wins, statistics.black_wins, statistics.numGames);
+
+    fprintf(output, "Overall statistics\n");
+    fprintf(output, "==================\n");
+    fprintf(output, "\n- Basic:\n");
+    fprintf(output, "\t·Total number of white wins: %-4u (%.2f%%)\n", statistics.white_wins, whiteWinPercentage);
+    fprintf(output, "\t·Total number of black wins: %-4u (%.2f%%)\n", statistics.black_wins, blackWinPercentage);
+    fprintf(output, "\t·Total winrate             : %.2f%%\n", winRate);
+    fprintf(output, "\t·Total number of draws     : %-4u (%.2f%%)\n", statistics.draws, drawPercentage);
+    fprintf(output, "\t·Total number of games     : %-4lu\n", statistics.numGames);
+    fprintf(output, "\t·Total number of moves     : %-4lu\n", statistics.totalMoveCount);
+    fprintf(output, "------------------\n\n");
+    fprintf(output, "- Averages:\n");
+    fprintf(output, "\t·Average game duration     : %.2f\n", statistics.averageGameDuration);
+    fprintf(output, "\t·Average PlyCount          : %-4u\n", statistics.averagePlyCount);
+    fprintf(output, "\t·Average depth per move    : %-4u\n", statistics.averageDepth);
+    fprintf(output, "\t·Average time per move     : %.2f seconds\n", statistics.averageTimePerMove);
+    fprintf(output, "------------------\n\n");
+    fprintf(output, "- ECO Distribution:\n");
+
+    for (int i = 0; i < NUM_ECOS; i++)
+    {
+        fprintf(output, "\t·ECO %c number of games: %-4u (%.2f%%)\n", 'A' + i, statistics.ecoCodeGames[i],
+                statistics.averageEcoCodes[i]);
+    }
+
+    fprintf(output, "==================\n");
+
 }
