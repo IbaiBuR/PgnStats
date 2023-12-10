@@ -36,6 +36,7 @@ void initializePlayers(Players *players, unsigned totalPlayers)
 void initializeStatistics(Statistics *statistics)
 {
     statistics->noBookMoveCount = 0;
+    statistics->totalMoveCount = 0;
     statistics->numGames = 0;
     statistics->draws = 0;
     statistics->white_wins = 0;

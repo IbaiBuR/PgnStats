@@ -64,7 +64,7 @@ void getAverageGameDuration(FILE *input, Statistics *statistics)
         }
 
         rewind(input);
-        statistics->averageGameDuration = totalDuration / statistics->numGames;
+        statistics->averageGameDuration = (double) totalDuration / statistics->numGames;
     }
     else
         printf("The GameDuration tag was not found\n");
@@ -87,7 +87,7 @@ void getAveragePlyCount(FILE *input, Statistics *statistics)
             }
         }
 
-        statistics->averagePlyCount = totalPlyCount / numGames(input);
+        statistics->averagePlyCount = totalPlyCount / statistics->numGames;
         rewind(input);
     }
     else
