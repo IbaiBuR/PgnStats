@@ -197,10 +197,10 @@ void printOverallStats(Statistics statistics, FILE *output)
     fprintf(output, "\t·Total number of moves     : %-7lu\n", statistics.totalMoveCount);
     fprintf(output, "------------------\n\n");
     fprintf(output, "- Averages:\n");
-    fprintf(output, "\t·Average game duration     : %.2f seconds\n", statistics.averageGameDuration);
+    fprintf(output, "\t·Average game duration     : %-7.2f seconds\n", statistics.averageGameDuration);
     fprintf(output, "\t·Average PlyCount          : %-7u\n", statistics.averagePlyCount);
     fprintf(output, "\t·Average depth per move    : %-7u\n", statistics.averageDepth);
-    fprintf(output, "\t·Average time per move     : %.2f seconds\n", statistics.averageTimePerMove);
+    fprintf(output, "\t·Average time per move     : %-7.2f seconds\n", statistics.averageTimePerMove);
     fprintf(output, "------------------\n\n");
     fprintf(output, "- ECO Distribution:\n");
 
