@@ -1,5 +1,4 @@
 # PgnStats
-___
 ## Overview
 
 PgnStats is a little C program that calculates some basic statistics (both overall and individual) from an input (commented & cutechess-like) pgn file, such as:
