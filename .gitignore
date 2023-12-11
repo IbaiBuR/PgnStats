@@ -1,9 +1,8 @@
 *.pgn
-*.txt
 *.exe
 .idea/*
 .vscode/*
 /pgn
+/scripts
 /cmake-build-debug/*
-CMakeLists.txt
 PgnStats

@@ -189,27 +189,26 @@ void printOverallStats(Statistics statistics, FILE *output)
     fprintf(output, "Overall statistics\n");
     fprintf(output, "==================\n");
     fprintf(output, "\n- Basic:\n");
-    fprintf(output, "\t·Total number of white wins: %-4u (%.2f%%)\n", statistics.white_wins, whiteWinPercentage);
-    fprintf(output, "\t·Total number of black wins: %-4u (%.2f%%)\n", statistics.black_wins, blackWinPercentage);
+    fprintf(output, "\t·Total number of white wins: %-7u (%.2f%%)\n", statistics.white_wins, whiteWinPercentage);
+    fprintf(output, "\t·Total number of black wins: %-7u (%.2f%%)\n", statistics.black_wins, blackWinPercentage);
     fprintf(output, "\t·Total winrate             : %.2f%%\n", winRate);
-    fprintf(output, "\t·Total number of draws     : %-4u (%.2f%%)\n", statistics.draws, drawPercentage);
-    fprintf(output, "\t·Total number of games     : %-4lu\n", statistics.numGames);
-    fprintf(output, "\t·Total number of moves     : %-4lu\n", statistics.totalMoveCount);
+    fprintf(output, "\t·Total number of draws     : %-7u (%.2f%%)\n", statistics.draws, drawPercentage);
+    fprintf(output, "\t·Total number of games     : %-7lu\n", statistics.numGames);
+    fprintf(output, "\t·Total number of moves     : %-7lu\n", statistics.totalMoveCount);
     fprintf(output, "------------------\n\n");
     fprintf(output, "- Averages:\n");
-    fprintf(output, "\t·Average game duration     : %.2f\n", statistics.averageGameDuration);
-    fprintf(output, "\t·Average PlyCount          : %-4u\n", statistics.averagePlyCount);
-    fprintf(output, "\t·Average depth per move    : %-4u\n", statistics.averageDepth);
+    fprintf(output, "\t·Average game duration     : %.2f seconds\n", statistics.averageGameDuration);
+    fprintf(output, "\t·Average PlyCount          : %-7u\n", statistics.averagePlyCount);
+    fprintf(output, "\t·Average depth per move    : %-7u\n", statistics.averageDepth);
     fprintf(output, "\t·Average time per move     : %.2f seconds\n", statistics.averageTimePerMove);
     fprintf(output, "------------------\n\n");
     fprintf(output, "- ECO Distribution:\n");
 
     for (int i = 0; i < NUM_ECOS; i++)
     {
-        fprintf(output, "\t·ECO %c number of games: %-4u (%.2f%%)\n", 'A' + i, statistics.ecoCodeGames[i],
+        fprintf(output, "\t·ECO %c number of games     : %-7u (%.2f%%)\n", 'A' + i, statistics.ecoCodeGames[i],
                 statistics.averageEcoCodes[i]);
     }
 
     fprintf(output, "==================\n");
-
 }
