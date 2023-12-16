@@ -60,7 +60,8 @@ void getIndividualStats(FILE *input, FILE *output)
 
     rewind(input);
     getIndividualAverageDepth(input, &players);
-    printIndividualStats(players, output, numGames(input));
+    getIndividualTotalMoveCount(input, &players);
+    printIndividualStats(players, output, numGames(input), totalMoveCount(input));
 }
 
 void getIndividualAverageDepth(FILE *input, Players *players)
@@ -123,13 +124,61 @@ void getIndividualAverageDepth(FILE *input, Players *players)
         }
 
         players->individualAverageDepth[i] = individualTotalDepth[i] / move_count;
+        players->totalPlayerNoBookMoves[i] = move_count;
         rewind(input);
     }
 
     rewind(input);
 }
 
-void printIndividualStats(Players players, FILE *output, size_t totalGames)
+void getIndividualTotalMoveCount(FILE *input, Players *players)
+{
+    char buffer[MAX_MOVES];
+    char whitePlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+    char blackPlayerName[MAX_PLAYER_NAME_LENGTH] = "";
+    bool isWhitePlayer = false;
+    bool isBlackPlayer = false;
+    bool isWhiteTurn = true;
+
+    for (int i = 0; i < players->totalPlayers; i++)
+    {
+        while (fgets(buffer, sizeof(buffer), input))
+        {
+            if (strstr(buffer, "[White "))
+            {
+                (sscanf(buffer, "[White \"%[^\"]\"]", whitePlayerName));
+                isWhiteTurn = true;
+            }
+            if (strstr(buffer, "[Black "))
+                (sscanf(buffer, "[Black \"%[^\"]\"]", blackPlayerName));
+
+            if (strcmp(whitePlayerName, players->playerNames[i]) == 0)
+                isWhitePlayer = true;
+            else
+                isWhitePlayer = false;
+
+            if (strcmp(blackPlayerName, players->playerNames[i]) == 0)
+                isBlackPlayer = true;
+            else
+                isBlackPlayer = false;
+
+            char *movestart = FIND_MOVESTART(buffer);
+
+            while (movestart)
+            {
+                if ((isWhitePlayer && isWhiteTurn) || (isBlackPlayer && !isWhiteTurn))
+                    players->totalPlayerMoves[i]++;
+
+                isWhiteTurn = !isWhiteTurn;
+                movestart = strstr(movestart + 1, "{");
+            }
+        }
+        rewind(input);
+    }
+    rewind(input);
+}
+
+void printIndividualStats(Players players, FILE *output, size_t totalGames, size_t totalMoves)
 {
     fprintf(output, "Individual statistics for each player\n");
     fprintf(output, "=====================================\n");
@@ -138,18 +187,20 @@ void printIndividualStats(Players players, FILE *output, size_t totalGames)
     for (int i = 0; i < players.totalPlayers; i++)
     {
         fprintf(output, "- Player: %-20s\n", players.playerNames[i]);
-        fprintf(output, "\t·White wins : %-5u (%.2f%%)\n", players.individualWhiteWins[i],
+        fprintf(output, "\t·White wins : %-7u (%.2f%%)\n", players.individualWhiteWins[i],
                 calculateWhiteWinPercentage(players.individualWhiteWins[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Black wins : %-5u (%.2f%%)\n", players.individualBlackWins[i],
+        fprintf(output, "\t·Black wins : %-7u (%.2f%%)\n", players.individualBlackWins[i],
                 calculateBlackWinPercentage(players.individualBlackWins[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Draws      : %-5u (%.2f%%)\n", players.individualDraws[i],
+        fprintf(output, "\t·Draws      : %-7u (%.2f%%)\n", players.individualDraws[i],
                 calculateDrawPercentage(players.individualDraws[i], players.totalPlayerGames[i]));
-        fprintf(output, "\t·Total games: %-5lu (%.2f%%)\n", players.totalPlayerGames[i],
+        fprintf(output, "\t·Total games: %-7lu (%.2f%%)\n", players.totalPlayerGames[i],
                 calculateGamePercentage(players.totalPlayerGames[i], totalGames));
+        fprintf(output, "\t·Total moves: %-7lu (%.2f%%)\n", players.totalPlayerMoves[i],
+                calculateMovePercentage(players.totalPlayerMoves[i], totalMoves));
         fprintf(output, "\t·Win rate   : %.2f%%\n",
                 calculateWinRate(players.individualWhiteWins[i], players.individualBlackWins[i],
                                  players.totalPlayerGames[i]));
-        fprintf(output, "\t·Avg. Depth : %-5u\n", players.individualAverageDepth[i]);
+        fprintf(output, "\t·Avg. Depth : %-7u\n", players.individualAverageDepth[i]);
 
         if (i + 1 != players.totalPlayers)
             fprintf(output, "\n------------------------------\n\n");

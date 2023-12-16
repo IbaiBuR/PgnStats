@@ -30,6 +30,8 @@ void initializePlayers(Players *players, unsigned totalPlayers)
         players->individualDraws[i] = 0;
         players->totalPlayerGames[i] = 0;
         players->individualAverageDepth[i] = 0;
+        players->totalPlayerMoves[i] = 0;
+        players->totalPlayerNoBookMoves[i] = 0;
     }
 }
 
@@ -134,6 +136,11 @@ double calculateWinRate(unsigned whiteWins, unsigned blackWins, size_t totalGame
 double calculateGamePercentage(size_t totalGames, size_t totalGamesInFile)
 {
     return (double) totalGames / totalGamesInFile * 100;
+}
+
+double calculateMovePercentage(size_t totalMoves, size_t totalMovesInFile)
+{
+    return (double) totalMoves / totalMovesInFile * 100;
 }
 
 size_t numGames(FILE *input)

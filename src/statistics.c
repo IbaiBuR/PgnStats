@@ -191,7 +191,7 @@ void printOverallStats(Statistics statistics, FILE *output)
     fprintf(output, "\n- Basic:\n");
     fprintf(output, "\t·Total number of white wins: %-7u (%.2f%%)\n", statistics.white_wins, whiteWinPercentage);
     fprintf(output, "\t·Total number of black wins: %-7u (%.2f%%)\n", statistics.black_wins, blackWinPercentage);
-    fprintf(output, "\t·Total winrate             : %.2f%%\n", winRate);
+    fprintf(output, "\t·Total win rate            : %.2f%%\n", winRate);
     fprintf(output, "\t·Total number of draws     : %-7u (%.2f%%)\n", statistics.draws, drawPercentage);
     fprintf(output, "\t·Total number of games     : %-7lu\n", statistics.numGames);
     fprintf(output, "\t·Total number of moves     : %-7lu\n", statistics.totalMoveCount);

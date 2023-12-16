@@ -19,6 +19,8 @@ typedef struct Players
 {
     char playerNames[MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH];
     size_t totalPlayerGames[MAX_TOTAL_PLAYERS];
+    size_t totalPlayerMoves[MAX_TOTAL_PLAYERS];
+    size_t totalPlayerNoBookMoves[MAX_TOTAL_PLAYERS];
     unsigned individualWhiteWins[MAX_TOTAL_PLAYERS];
     unsigned individualBlackWins[MAX_TOTAL_PLAYERS];
     unsigned individualDraws[MAX_TOTAL_PLAYERS];
