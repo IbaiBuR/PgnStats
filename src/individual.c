@@ -127,8 +127,6 @@ void getIndividualAverageDepth(FILE *input, Players *players)
         players->totalPlayerNoBookMoves[i] = move_count;
         rewind(input);
     }
-
-    rewind(input);
 }
 
 void getIndividualTotalMoveCount(FILE *input, Players *players)
@@ -175,7 +173,6 @@ void getIndividualTotalMoveCount(FILE *input, Players *players)
         }
         rewind(input);
     }
-    rewind(input);
 }
 
 void printIndividualStats(Players players, FILE *output, size_t totalGames, size_t totalMoves)

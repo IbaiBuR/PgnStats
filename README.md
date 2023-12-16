@@ -68,32 +68,35 @@ Individual statistics for each player
 There are exactly 3 players in the PGN file:
 
 - Player: Eman                
-	·White wins : 3094  (4.89%)
-	·Black wins : 471   (0.74%)
-	·Draws      : 57062 (90.12%)
-	·Total games: 63318 (100.00%)
+	·White wins : 3094    (4.89%)
+	·Black wins : 471     (0.74%)
+	·Draws      : 57062   (90.12%)
+	·Total games: 63318   (100.00%)
+	·Total moves: 3863515 (50.00%)
 	·Win rate   : 5.63%
-	·Avg. Depth : 30   
+	·Avg. Depth : 30     
 
 ------------------------------
 
 - Player: ShashChess          
-	·White wins : 1104  (3.49%)
-	·Black wins : 161   (0.51%)
-	·Draws      : 28235 (89.18%)
-	·Total games: 31660 (50.00%)
+	·White wins : 1104    (3.49%)
+	·Black wins : 161     (0.51%)
+	·Draws      : 28235   (89.18%)
+	·Total games: 31660   (50.00%)
+	·Total moves: 1904186 (24.65%)
 	·Win rate   : 4.00%
-	·Avg. Depth : 26   
+	·Avg. Depth : 26     
 
 ------------------------------
 
 - Player: BrainLearn          
-	·White wins : 1232  (3.89%)
-	·Black wins : 194   (0.61%)
-	·Draws      : 28827 (91.06%)
-	·Total games: 31658 (50.00%)
+	·White wins : 1232    (3.89%)
+	·Black wins : 194     (0.61%)
+	·Draws      : 28827   (91.06%)
+	·Total games: 31658   (50.00%)
+	·Total moves: 1958656 (25.35%)
 	·Win rate   : 4.50%
-	·Avg. Depth : 30   
+	·Avg. Depth : 30     
 
 ==============================
 ```
