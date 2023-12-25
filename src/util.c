@@ -44,11 +44,12 @@ void initializePlayers(Players *players, unsigned totalPlayers)
     {
         players->individualWhiteWins[i] = 0;
         players->individualBlackWins[i] = 0;
+        players->individualWhiteLosses[i] = 0;
+        players->individualBlackLosses[i] = 0;
         players->individualDraws[i] = 0;
         players->totalPlayerGames[i] = 0;
         players->individualAverageDepth[i] = 0;
         players->totalPlayerMoves[i] = 0;
-        players->totalPlayerNoBookMoves[i] = 0;
     }
 }
 
