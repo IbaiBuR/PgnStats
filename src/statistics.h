@@ -15,8 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef STATISTICS_H
-#define STATISTICS_H
+#pragma once
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -29,5 +28,3 @@ void getAverageDepth(FILE *, Statistics *); // returns the average depth per mov
 void getAverageTimePerMove(FILE *, Statistics *); // returns the average time per move of the input PGN file
 void getAverageEco(FILE *, Statistics *); // returns the average eco code distribution of the input PGN file
 void printOverallStats(Statistics, FILE *); // prints the overall statistics calculated for the input PGN file
-
-#endif

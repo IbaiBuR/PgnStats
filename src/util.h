@@ -15,8 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef UTIL_H
-#define UTIL_H
+#pragma once
 
 #include <stdio.h>
 #include <stdbool.h>
@@ -37,5 +36,3 @@ unsigned getPlayers(FILE *, char [MAX_TOTAL_PLAYERS][MAX_PLAYER_NAME_LENGTH]); /
 size_t numGames(FILE *); //returns the total number of games in the PGN file
 size_t noBookMoveCount(FILE *); // returns the total number of non-book moves in the PGN file
 size_t totalMoveCount(FILE *); // return the total number of moves in the PGN file
-
-#endif

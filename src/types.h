@@ -15,8 +15,7 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
-#ifndef TYPES_H
-#define TYPES_H
+#pragma once
 
 #define NUM_ECOS 5
 #define MAX_MOVES 4096
@@ -61,5 +60,3 @@ typedef struct Statistics
     double averageTimePerMove;
     double averageEcoCodes[NUM_ECOS];
 } Statistics;
-
-#endif
