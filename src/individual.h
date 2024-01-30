@@ -18,6 +18,7 @@
 #pragma once
 
 #include <stdio.h>
+
 #include "types.h"
 
 void getIndividualStats(FILE *, FILE *); // returns some basic statistics for each player in the PGN file

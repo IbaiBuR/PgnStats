@@ -19,6 +19,7 @@
 
 #include <stdio.h>
 #include <stdbool.h>
+
 #include "types.h"
 
 void deleteTags(FILE *, FILE *); // removes conflicting tags from the input PGN file

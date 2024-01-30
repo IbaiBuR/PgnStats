@@ -15,10 +15,12 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "util.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
-#include "util.h"
+
 #include "types.h"
 
 void deleteTags(FILE *input, FILE *output)

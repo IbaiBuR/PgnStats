@@ -15,12 +15,14 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "individual.h"
+
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
+
 #include "types.h"
 #include "util.h"
-#include "individual.h"
 
 void getIndividualStats(FILE *input, FILE *output)
 {

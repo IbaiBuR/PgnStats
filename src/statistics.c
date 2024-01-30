@@ -15,17 +15,20 @@
  along with this program.  If not, see <https://www.gnu.org/licenses/>.
 */
 
+#include "statistics.h"
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #include "types.h"
-#include "statistics.h"
 #include "util.h"
 
 void getOverallStats(FILE *input, FILE *output)
 {
     char line[MAX_MOVES];
     Statistics pgnStats;
+    bool ecoTag = tagIsPresent(input, "[ECO ");
 
     initializeStatistics(&pgnStats);
 
@@ -49,10 +52,11 @@ void getOverallStats(FILE *input, FILE *output)
     getAveragePlyCount(input, &pgnStats);
     getAverageDepth(input, &pgnStats);
     getAverageTimePerMove(input, &pgnStats);
-    getAverageEco(input, &pgnStats);
 
-    printOverallStats(pgnStats, output);
+    if (!ecoTag)
+        getAverageEco(input, &pgnStats);
 
+    printOverallStats(pgnStats, output, ecoTag);
 }
 
 void getAverageGameDuration(FILE *input, Statistics *statistics)
@@ -196,7 +200,7 @@ void getAverageEco(FILE *input, Statistics *statistics)
     }
 }
 
-void printOverallStats(Statistics statistics, FILE *output)
+void printOverallStats(Statistics statistics, FILE *output, bool eco)
 {
     double whiteWinPercentage = calculateWhiteWinPercentage(statistics.white_wins, statistics.numGames);
     double blackWinPercentage = calculateBlackWinPercentage(statistics.black_wins, statistics.numGames);
@@ -219,12 +223,16 @@ void printOverallStats(Statistics statistics, FILE *output)
     fprintf(output, "\t·Average depth per move    : %-7u\n", statistics.averageDepth);
     fprintf(output, "\t·Average time per move     : %-7.2f seconds\n", statistics.averageTimePerMove);
     fprintf(output, "------------------\n\n");
-    fprintf(output, "- ECO Distribution:\n");
 
-    for (int i = 0; i < NUM_ECOS; i++)
+    if (eco)
     {
-        fprintf(output, "\t·ECO %c number of games     : %-7u (%.2f%%)\n", 'A' + i, statistics.ecoCodeGames[i],
-                statistics.averageEcoCodes[i]);
+        fprintf(output, "- ECO Distribution:\n");
+
+        for (int i = 0; i < NUM_ECOS; i++)
+        {
+            fprintf(output, "\t·ECO %c number of games     : %-7u (%.2f%%)\n", 'A' + i, statistics.ecoCodeGames[i],
+                    statistics.averageEcoCodes[i]);
+        }
     }
 
     fprintf(output, "==================\n");
