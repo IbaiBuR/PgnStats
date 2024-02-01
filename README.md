@@ -26,7 +26,7 @@ For <u>Linux</u>:
 ```
 ./PgnStats <name_of_your_pgn_file>.pgn
 ```
-## Sample output using a 60000+ games PGN
+## Sample output using a PGN from a [FishTest](https://tests.stockfishchess.org) patch
 
 ### Overall statistics
 
@@ -35,68 +35,56 @@ Overall statistics
 ==================
 
 - Basic:
-	·Total number of white wins: 5430    (8.58%)
-	·Total number of black wins: 826     (1.30%)
-	·Total winrate             : 9.88%
-	·Total number of draws     : 57062   (90.12%)
-	·Total number of games     : 63320  
-	·Total number of moves     : 7726357
+	·Total number of white wins: 29476   (52.12%)
+	·Total number of black wins: 226     (0.40%)
+	·Total win rate            : 52.52%
+	·Total number of draws     : 26711   (47.23%)
+	·Total number of games     : 56554  
+	·Total number of moves     : 6613877
 ------------------
 
 - Averages:
-	·Average game duration     : 214.03 seconds
-	·Average PlyCount          : 122    
-	·Average depth per move    : 29     
-	·Average time per move     : 1.93 seconds
+	·Average game duration     : 238.89  seconds
+	·Average PlyCount          : 116    
+	·Average depth per move    : 24     
+	·Average time per move     : 2.04    seconds
 ------------------
 
-- ECO Distribution:
-	·ECO A number of games     : 17245   (27.23%)
-	·ECO B number of games     : 12979   (20.50%)
-	·ECO C number of games     : 15000   (23.69%)
-	·ECO D number of games     : 6674    (10.54%)
-	·ECO E number of games     : 11422   (18.04%)
 ==================
 ```
+
+*Disclaimer*: The ECO distribution is not shown since FishTest uses EPDs for its tests
 
 ### Individual statistics
 
 ```text
-Individual statistics for each player
 =====================================
 
-There are exactly 3 players in the PGN file:
+There are exactly 2 players in the PGN file:
 
-- Player: Eman                
-	·White wins : 3094    (4.89%)
-	·Black wins : 471     (0.74%)
-	·Draws      : 57062   (90.12%)
-	·Total games: 63318   (100.00%)
-	·Total moves: 3863515 (50.00%)
-	·Win rate   : 5.63%
-	·Avg. Depth : 30     
-
-------------------------------
-
-- Player: ShashChess          
-	·White wins : 1104    (3.49%)
-	·Black wins : 161     (0.51%)
-	·Draws      : 28235   (89.18%)
-	·Total games: 31660   (50.00%)
-	·Total moves: 1904186 (24.65%)
-	·Win rate   : 4.00%
-	·Avg. Depth : 26     
+- Player: New-aae3e7f478      
+	·White wins     : 14704   (26.06%)
+	·Black wins     : 114     (0.20%)
+	·Draws          : 26711   (47.35%)
+	·Lost with white: 112     (0.20%)
+	·Lost with black: 14772   (26.19%)
+	·Total games    : 56413   (99.75%)
+	·Total moves    : 3307001 (50.00%)
+	·Win rate       : 26.27%
+	·Avg. Depth     : 24     
 
 ------------------------------
 
-- Player: BrainLearn          
-	·White wins : 1232    (3.89%)
-	·Black wins : 194     (0.61%)
-	·Draws      : 28827   (91.06%)
-	·Total games: 31658   (50.00%)
-	·Total moves: 1958656 (25.35%)
-	·Win rate   : 4.50%
-	·Avg. Depth : 30     
+- Player: Base-061f98a9e3     
+	·White wins     : 14772   (26.19%)
+	·Black wins     : 112     (0.20%)
+	·Draws          : 26711   (47.35%)
+	·Lost with white: 114     (0.20%)
+	·Lost with black: 14704   (26.06%)
+	·Total games    : 56413   (99.75%)
+	·Total moves    : 3306876 (50.00%)
+	·Win rate       : 26.38%
+	·Avg. Depth     : 24     
 
 ==============================
 ```
